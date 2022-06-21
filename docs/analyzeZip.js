@@ -19,12 +19,20 @@ export const analyzeZip = async (zip, name) => {
         .filter((file) => !file.dir)
         .map(async (file) => {
           const data = await file.async("string");
-          const result = analyzeFile(data, file.name);
+          const result = await analyzeFile(data, file.name);
           progress.value++;
           return result;
         })
     )
   ).flat();
+  if (zip.comment?.includes("Branchlock")) {
+    analyses.push({
+      match: "Branchlock",
+      desc: "Obfuscated with Branchlock",
+      obfuscation: true,
+      file: "[part of the jar's comment]",
+    });
+  }
   const obfuscationResults = analyses.filter((result) => result.obfuscation);
   if (obfuscationResults.length > 0) {
     document.querySelector("main").append(html`
@@ -55,7 +63,16 @@ export const analyzeZip = async (zip, name) => {
       document.querySelector("main").append(createResultTag(result, zip));
     }
   }
-  // TODO: Signatures
+  const signatureResults = analyses.filter((result) => result.signature);
+  if (signatureResults.length > 0) {
+    document.querySelector("main").append(html`
+      <h2 class="bg-zinc-900 p-2 text-3xl rounded-md">Signatures</h2>
+      <p>Marks of known rats.</p>
+    `);
+    for (const result of signatureResults) {
+      document.querySelector("main").append(createResultTag(result, zip));
+    }
+  }
   document.querySelector("main").append(html`
     <p>
       That's all the results we found.
@@ -63,7 +80,7 @@ export const analyzeZip = async (zip, name) => {
         class="bg-orange-500 hover:bg-orange-600 font-bold p-2 rounded-md"
         onclick="window.print()"
       >
-        Print
+        Export to doc
       </button>
     </p>
   `);
@@ -76,7 +93,7 @@ const createResultTag = (result, zip) => {
       <span class="text-sm">${result.desc}</span>
       <br />
       <span class="text-blue-400 font-bold cursor-pointer" id="sourceFile">
-        From ${result.file} ${result.segment ? `(base64 segment)` : ""}
+        From ${result.file} ${result.segment ? `(segment)` : ""}
       </span>
     </div>
   `;
@@ -84,7 +101,7 @@ const createResultTag = (result, zip) => {
     const data = result.segment || (await zip.files[result.file].async("string"));
     const dialog = html`
       <dialog class="bg-zinc-900 bg-opacity-90 p-4 my-4 rounded-md">
-        <h2 class="text-3xl">${result.file} ${result.segment ? `(base64 segment)` : ""}</h2>
+        <h2 class="text-3xl">${result.file} ${result.segment ? `(segment)` : ""}</h2>
         <pre class="text-sm whitespace-pre-wrap"></pre>
         <button
           class="bg-orange-500 hover:bg-orange-600 text-white font-bold p-2 rounded-md"
@@ -104,7 +121,12 @@ const createResultTag = (result, zip) => {
 };
 const flags = [
   { match: "Branchlock", desc: "Obfuscated with Branchlock", obfuscation: true },
-  { match: /(l|I){8,}/, desc: "Has random long strings", obfuscation: true },
+  {
+    match: /([a-zA-Z])([a-zA-Z])(\1|\2){9,}/,
+    desc: "Has random long strings, like aaalaaaaaaa or IlIlIIlllII",
+    obfuscation: true,
+    ignoreNonClasses: true,
+  },
   {
     match: "https://api.anonfiles.com/upload",
     desc: "Uploading data to AnonFiles",
@@ -166,32 +188,35 @@ const flags = [
     desc: "Tries to see what data breaches you have",
     collection: true,
   },
+  { match: "CustomPayload", desc: "Signature from the rat maker CustomPayload.", signature: true },
 ];
 const analyzeFile = async (data, fileName) => {
-  const stringsToCheck = [data];
+  const stringsToCheck = [data, fileName];
   for (const match of data.match(/(?:[A-Za-z\d+/]{4})*(?:[A-Za-z\d+/]{3}=|[A-Za-z\d+/]{2}==)?/gm)) {
     if (match.length < 20) continue;
     try {
       const decoded = atob(match);
+      if (/[^\u0010-\u007f]/.test(decoded)) continue;
       stringsToCheck.push(decoded);
     } catch (e) {}
   }
   const flagsFound = [];
-  let isWholeFile = true;
+  let i = 0;
   for (const stringToCheck of stringsToCheck) {
     for (const flag of flags) {
+      if (flag.ignoreNonClasses && (i > 2 || !fileName.endsWith("class"))) continue;
       if (
         (typeof flag.match == "string" && stringToCheck.includes(flag.match)) ||
         (flag.match instanceof RegExp && flag.match.test(stringToCheck))
       ) {
-        if (isWholeFile) {
+        if (i == 0) {
           flagsFound.push({ ...flag, file: fileName });
         } else {
           flagsFound.push({ ...flag, file: fileName, segment: stringToCheck });
         }
       }
     }
-    isWholeFile = false;
+    i++;
   }
   return flagsFound;
 };
