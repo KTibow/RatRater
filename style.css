@@ -1,0 +1,13 @@
+@import url("https://fonts.googleapis.com/icon?family=Material+Icons");
+.mti {
+  font-family: "Material Icons";
+}
+:root {
+  color-scheme: dark;
+}
+.border-revert {
+  border: revert;
+}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
