@@ -189,6 +189,8 @@ const flags = [
     collection: true,
   },
   { match: "CustomPayload", desc: "Signature from the rat maker CustomPayload.", signature: true },
+  { match: "BreadOS/69.420", desc: "Signature from Breadcat's rats.", signature: true },
+  { match: "SmolPeePeeEnergy", desc: "Signature from Breadcat's rats.", signature: true },
 ];
 const analyzeFile = async (data, fileName) => {
   const stringsToCheck = [data, fileName];
