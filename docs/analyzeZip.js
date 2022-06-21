@@ -35,13 +35,17 @@ export const analyzeZip = async (zip, name) => {
   }
   const obfuscationResults = analyses.filter((result) => result.obfuscation);
   if (obfuscationResults.length > 0) {
-    document.querySelector("main").append(html`
-      <h2 class="bg-zinc-900 p-2 text-3xl rounded-md">Obfuscation</h2>
-      <p>When people make the source code harder to read.</p>
+    const obfuscationArea = document.createElement("details");
+    obfuscationArea.append(html`
+      <summary class="cursor-pointer bg-orange-500 bg-opacity-25 p-2 rounded-md">
+        <h2 class="inline-block text-3xl">Obfuscation</h2>
+        <p>When people make the source code harder to read.</p>
+      </summary>
     `);
     for (const result of obfuscationResults) {
-      document.querySelector("main").append(createResultTag(result, zip));
+      obfuscationArea.append(createResultTag(result, zip));
     }
+    document.querySelector("main").append(obfuscationArea);
   }
   const uploadingResults = analyses.filter((result) => result.uploading);
   if (uploadingResults.length > 0) {
