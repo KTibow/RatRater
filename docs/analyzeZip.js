@@ -122,10 +122,9 @@ const createResultTag = (result, zip) => {
 const flags = [
   { match: "Branchlock", desc: "Obfuscated with Branchlock", obfuscation: true },
   {
-    match: /([a-zA-Z])([a-zA-Z])(\1|\2){9,}/,
-    desc: "Has random long strings, like aaalaaaaaaa or IlIlIIlllII",
+    match: /[Il]{9,}/,
+    desc: "Has random long strings, like IlIlIIlllII",
     obfuscation: true,
-    ignoreNonClasses: true,
   },
   {
     match: "https://api.anonfiles.com/upload",
@@ -151,7 +150,7 @@ const flags = [
   { match: '"APPDATA"', desc: "Might try to get data from other apps", collection: true },
   { match: "createScreenCapture", desc: "Takes a photo of your screen", collection: true },
   {
-    match: "blackboard",
+    match: / ey[^]+blackboard/,
     desc: "Might try to read your session ID from the launch args",
     collection: true,
   },
@@ -206,7 +205,6 @@ const analyzeFile = async (data, fileName) => {
   let i = 0;
   for (const stringToCheck of stringsToCheck) {
     for (const flag of flags) {
-      if (flag.ignoreNonClasses && (i > 2 || !fileName.endsWith("class"))) continue;
       if (
         (typeof flag.match == "string" && stringToCheck.includes(flag.match)) ||
         (flag.match instanceof RegExp && flag.match.test(stringToCheck))
