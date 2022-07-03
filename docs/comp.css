@@ -6,6 +6,25 @@
   border: revert;
 }
 
+.line-numbers {
+  counter-reset: line;
+}
+
+.line-numbers span::before {
+  counter-increment: line;
+  content: counter(line);
+  min-width: 4ch;
+  margin-right: 0.5rem;
+  display: inline-block;
+  border-right-width: 2px;
+  --tw-border-opacity: 1;
+  border-right-color: rgb(192 38 211 / var(--tw-border-opacity));
+  padding-right: 0.5rem;
+  text-align: right;
+  --tw-text-opacity: 1;
+  color: rgb(192 38 211 / var(--tw-text-opacity));
+}
+
 /*
 ! tailwindcss v3.0.24 | MIT License | https://tailwindcss.com
 */
@@ -571,13 +590,12 @@ Ensure the default browser behavior of the `hidden` attribute.
   white-space: pre-wrap;
 }
 
-.rounded-md {
-  border-radius: 0.375rem;
+.break-words {
+  overflow-wrap: break-word;
 }
 
-.bg-zinc-900 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(24 24 27 / var(--tw-bg-opacity));
+.rounded-md {
+  border-radius: 0.375rem;
 }
 
 .bg-orange-500 {
@@ -585,14 +603,13 @@ Ensure the default browser behavior of the `hidden` attribute.
   background-color: rgb(249 115 22 / var(--tw-bg-opacity));
 }
 
-.bg-orange-400 {
+.bg-zinc-900 {
   --tw-bg-opacity: 1;
-  background-color: rgb(251 146 60 / var(--tw-bg-opacity));
+  background-color: rgb(24 24 27 / var(--tw-bg-opacity));
 }
 
-.bg-orange-600 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(234 88 12 / var(--tw-bg-opacity));
+.bg-opacity-25 {
+  --tw-bg-opacity: 0.25;
 }
 
 .bg-opacity-40 {
@@ -601,14 +618,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .bg-opacity-90 {
   --tw-bg-opacity: 0.9;
-}
-
-.bg-opacity-10 {
-  --tw-bg-opacity: 0.1;
-}
-
-.bg-opacity-25 {
-  --tw-bg-opacity: 0.25;
 }
 
 .bg-\[url\(layered-waves-haikei\.svg\)\] {

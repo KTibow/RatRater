@@ -108,7 +108,7 @@ const createResultTag = (result, zip) => {
     const dialog = html`
       <dialog class="bg-zinc-900 bg-opacity-90 p-4 my-4 rounded-md">
         <h2 class="text-3xl">${result.file} ${result.segment ? `(segment)` : ""}</h2>
-        <pre class="text-sm whitespace-pre-wrap"></pre>
+        <pre class="text-sm whitespace-pre-wrap break-words line-numbers"></pre>
         <button
           class="bg-orange-500 hover:bg-orange-600 text-white font-bold p-2 rounded-md"
           onclick="this.parentElement.close()"
@@ -117,11 +117,17 @@ const createResultTag = (result, zip) => {
         </button>
       </dialog>
     `;
-    dialog.querySelector("pre").textContent = data;
+    for (const line of data.split("\n")) {
+      const lineTag = document.createElement("span");
+      lineTag.innerText = line;
+      lineTag.className = "block";
+      dialog.querySelector("pre").append(lineTag);
+    }
     const mark = new Mark(dialog.querySelector("pre"));
     result.match instanceof RegExp ? mark.markRegExp(result.match) : mark.mark(result.match);
     document.body.append(dialog);
     dialog.showModal();
+    dialog.querySelector("mark").scrollIntoView();
   });
   return tag;
 };
