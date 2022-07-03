@@ -1,3 +1,4 @@
+@import url("https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/styles/atom-one-dark.min.css");
 :root {
   color-scheme: dark;
 }
@@ -7,11 +8,11 @@
 .line-numbers {
   counter-reset: line;
 }
-.line-numbers span::before {
+.line-numbers > span::before {
   counter-increment: line;
   content: counter(line);
   min-width: 4ch;
-  @apply text-right text-fuchsia-600 inline-block pr-2 border-r-2 border-r-fuchsia-600 mr-2;
+  @apply text-right text-orange-500 inline-block pr-2 border-r-2 border-r-orange-500 mr-2;
 }
 @tailwind base;
 @tailwind components;

@@ -1,6 +1,7 @@
 /// <reference path="base.js" />
 import JSZip from "https://esm.run/jszip";
 import Mark from "https://esm.run/mark.js";
+import HightlightJS from "https://esm.run/highlight.js";
 /**
  *
  * @param {JSZip} zip
@@ -91,6 +92,8 @@ export const analyzeZip = async (zip, name) => {
     </p>
   `);
 };
+
+const cache = await caches.open("decompiler-cache");
 const createResultTag = (result, zip) => {
   const tag = html`
     <div class="bg-zinc-900 bg-opacity-40 p-4 my-4 rounded-md">
@@ -106,7 +109,7 @@ const createResultTag = (result, zip) => {
   tag.querySelector("#sourceFile").addEventListener("click", async () => {
     const data = result.segment || (await zip.files[result.file].async("string"));
     const dialog = html`
-      <dialog class="bg-zinc-900 bg-opacity-90 p-4 my-4 rounded-md">
+      <dialog class="bg-[#282c34] bg-opacity-80 backdrop-blur-lg p-4 my-4 rounded-md">
         <h2 class="text-3xl">${result.file} ${result.segment ? `(segment)` : ""}</h2>
         <pre class="text-sm whitespace-pre-wrap break-words line-numbers"></pre>
         <button
@@ -115,8 +118,18 @@ const createResultTag = (result, zip) => {
         >
           Close
         </button>
+        ${result.segment
+          ? ""
+          : `
+        <button
+          class="bg-orange-500 hover:bg-orange-600 text-white font-bold p-2 rounded-md"
+          id="decompile"
+        >
+          Decompile
+        </button>`}
       </dialog>
     `;
+    dialog.querySelector("pre").innerHTML = "";
     for (const line of data.split("\n")) {
       const lineTag = document.createElement("span");
       lineTag.innerText = line;
@@ -125,6 +138,37 @@ const createResultTag = (result, zip) => {
     }
     const mark = new Mark(dialog.querySelector("pre"));
     result.match instanceof RegExp ? mark.markRegExp(result.match) : mark.mark(result.match);
+    dialog.querySelector("#decompile").addEventListener("click", async () => {
+      dialog.querySelector("#decompile").innerText = "Decompiling...";
+      const formData = new FormData();
+      const dataToDecomp = new Blob([await zip.files[result.file].async("arraybuffer")]);
+      formData.set("to_be_decompiled", dataToDecomp, result.file.replace(/\//g, "_"));
+      try {
+        let decompiled = localStorage[data.hashCode()];
+        if (!decompiled) {
+          const response = await fetch("https://Decompiler.ktibow.repl.co", {
+            method: "POST",
+            body: formData,
+          });
+          decompiled = await response.text();
+          localStorage[data.hashCode()] = decompiled;
+        }
+        dialog.querySelector("pre").innerHTML = "";
+        const highlighted = HightlightJS.highlight(decompiled, { language: "java" });
+        for (const line of highlighted.value.split("\n")) {
+          const lineTag = document.createElement("span");
+          lineTag.innerHTML = line;
+          lineTag.className = "block";
+          dialog.querySelector("pre").append(lineTag);
+        }
+        result.match instanceof RegExp ? mark.markRegExp(result.match) : mark.mark(result.match);
+        dialog.querySelector("mark").scrollIntoView();
+        dialog.querySelector("#decompile").remove();
+      } catch (e) {
+        dialog.querySelector("#decompile").innerText = "Failed to decompile";
+        console.error(e);
+      }
+    });
     document.body.append(dialog);
     dialog.showModal();
     dialog.querySelector("mark").scrollIntoView();
@@ -199,7 +243,11 @@ const flags = [
     desc: "Tries to see what data breaches you have",
     collection: true,
   },
-  { match: "CustomPayload", desc: "Signature from the rat maker CustomPayload.", signature: true },
+  {
+    match: "CustomPayload#1337",
+    desc: "Signature from the rat maker CustomPayload.",
+    signature: true,
+  },
   { match: "BreadOS/69.420", desc: "Signature from Breadcat's rats.", signature: true },
   { match: "SmolPeePeeEnergy", desc: "Signature from Breadcat's rats.", signature: true },
   { match: /modid.{1,5}Detectme/, desc: "Signature mod ID from Breadcat's rats.", signature: true },

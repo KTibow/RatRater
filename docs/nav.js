@@ -4,22 +4,20 @@ document.querySelector("#filePicker").addEventListener("change", (e) => {
   document.querySelector("#analysis").style.visibility = "visible";
   document.querySelector("#analysis").style.opacity = "1";
   document.querySelector("main").innerHTML = "Loading...";
-  setTimeout(() => {
-    const file = e.target.files[0];
-    const reader = new FileReader();
-    reader.onload = async (e) => {
-      const data = e.target.result;
-      let zip;
-      try {
-        zip = await new JSZip().loadAsync(data);
-      } catch (e) {
-        alert("Something went wrong. It might not be a valid jar.");
-        console.error(e);
-      }
-      analyzeZip(zip, file.name);
-    };
-    reader.readAsArrayBuffer(file);
-  }, 200);
+  const file = e.target.files[0];
+  const reader = new FileReader();
+  reader.readAsArrayBuffer(file);
+  reader.onload = async (e) => {
+    const data = e.target.result;
+    let zip;
+    try {
+      zip = await new JSZip().loadAsync(data);
+    } catch (e) {
+      alert("Something went wrong. It might not be a valid jar.");
+      console.error(e);
+    }
+    analyzeZip(zip, file.name);
+  };
 });
 document.body.addEventListener(
   "dragover",
@@ -46,20 +44,18 @@ document.body.addEventListener("drop", (e) => {
   document.querySelector("#analysis").style.visibility = "visible";
   document.querySelector("#analysis").style.opacity = "1";
   document.querySelector("main").innerHTML = "Loading...";
-  setTimeout(() => {
-    const file = e.dataTransfer.files[0];
-    const reader = new FileReader();
-    reader.onload = async (e) => {
-      const data = e.target.result;
-      let zip;
-      try {
-        zip = await new JSZip().loadAsync(data);
-      } catch (e) {
-        alert("Something went wrong. It might not be a valid jar.");
-        console.error(e);
-      }
-      analyzeZip(zip, file.name);
-    };
-    reader.readAsArrayBuffer(file);
-  }, 200);
+  const file = e.dataTransfer.files[0];
+  const reader = new FileReader();
+  reader.readAsArrayBuffer(file);
+  reader.onload = async (e) => {
+    const data = e.target.result;
+    let zip;
+    try {
+      zip = await new JSZip().loadAsync(data);
+    } catch (e) {
+      alert("Something went wrong. It might not be a valid jar.");
+      console.error(e);
+    }
+    analyzeZip(zip, file.name);
+  };
 });
