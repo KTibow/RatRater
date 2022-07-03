@@ -138,37 +138,39 @@ const createResultTag = (result, zip) => {
     }
     const mark = new Mark(dialog.querySelector("pre"));
     result.match instanceof RegExp ? mark.markRegExp(result.match) : mark.mark(result.match);
-    dialog.querySelector("#decompile").addEventListener("click", async () => {
-      dialog.querySelector("#decompile").innerText = "Decompiling...";
-      const formData = new FormData();
-      const dataToDecomp = new Blob([await zip.files[result.file].async("arraybuffer")]);
-      formData.set("to_be_decompiled", dataToDecomp, result.file.replace(/\//g, "_"));
-      try {
-        let decompiled = localStorage[data.hashCode()];
-        if (!decompiled) {
-          const response = await fetch("https://Decompiler.ktibow.repl.co", {
-            method: "POST",
-            body: formData,
-          });
-          decompiled = await response.text();
-          localStorage[data.hashCode()] = decompiled;
+    if (!result.segment) {
+      dialog.querySelector("#decompile").addEventListener("click", async () => {
+        dialog.querySelector("#decompile").innerText = "Decompiling...";
+        const formData = new FormData();
+        const dataToDecomp = new Blob([await zip.files[result.file].async("arraybuffer")]);
+        formData.set("to_be_decompiled", dataToDecomp, result.file.replace(/\//g, "_"));
+        try {
+          let decompiled = localStorage[data.hashCode()];
+          if (!decompiled) {
+            const response = await fetch("https://Decompiler.ktibow.repl.co", {
+              method: "POST",
+              body: formData,
+            });
+            decompiled = await response.text();
+            localStorage[data.hashCode()] = decompiled;
+          }
+          dialog.querySelector("pre").innerHTML = "";
+          const highlighted = HightlightJS.highlight(decompiled, { language: "java" });
+          for (const line of highlighted.value.split("\n")) {
+            const lineTag = document.createElement("span");
+            lineTag.innerHTML = line;
+            lineTag.className = "block";
+            dialog.querySelector("pre").append(lineTag);
+          }
+          dialog.querySelector("#decompile").remove();
+        } catch (e) {
+          dialog.querySelector("#decompile").innerText = "Failed to decompile";
+          console.error(e);
         }
-        dialog.querySelector("pre").innerHTML = "";
-        const highlighted = HightlightJS.highlight(decompiled, { language: "java" });
-        for (const line of highlighted.value.split("\n")) {
-          const lineTag = document.createElement("span");
-          lineTag.innerHTML = line;
-          lineTag.className = "block";
-          dialog.querySelector("pre").append(lineTag);
-        }
-        dialog.querySelector("#decompile").remove();
-      } catch (e) {
-        dialog.querySelector("#decompile").innerText = "Failed to decompile";
-        console.error(e);
-      }
-      result.match instanceof RegExp ? mark.markRegExp(result.match) : mark.mark(result.match);
-      dialog.querySelector("mark").scrollIntoView();
-    });
+        result.match instanceof RegExp ? mark.markRegExp(result.match) : mark.mark(result.match);
+        dialog.querySelector("mark").scrollIntoView();
+      });
+    }
     document.body.append(dialog);
     dialog.showModal();
     dialog.querySelector("mark").scrollIntoView();
