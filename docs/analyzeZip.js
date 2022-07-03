@@ -7,22 +7,24 @@ import Mark from "https://esm.run/mark.js";
  * @param {string} name
  */
 export const analyzeZip = async (zip, name) => {
+  const analyzableFiles = Object.values(zip.files).filter((file) => !file.dir);
   document.querySelector("main").innerHTML = `
     RatRater results for ${name}
-    <progress id="progress" max="${zip.files.length}" value="0" class="border-revert w-full"></progress>
+    <progress id="progress" max="${
+      analyzableFiles.length * 2
+    }" value="0" class="border-revert w-full"></progress>
   `;
   const progress = document.querySelector("#progress");
   console.log(zip);
   const analyses = (
     await Promise.all(
-      Object.values(zip.files)
-        .filter((file) => !file.dir)
-        .map(async (file) => {
-          const data = await file.async("string");
-          const result = await analyzeFile(data, file.name);
-          progress.value++;
-          return result;
-        })
+      analyzableFiles.map(async (file) => {
+        const data = await file.async("string");
+        progress.value++;
+        const result = await analyzeFile(data, file.name);
+        progress.value++;
+        return result;
+      })
     )
   ).flat();
   if (zip.comment?.includes("Branchlock")) {
