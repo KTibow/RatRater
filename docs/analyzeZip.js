@@ -161,13 +161,13 @@ const createResultTag = (result, zip) => {
           lineTag.className = "block";
           dialog.querySelector("pre").append(lineTag);
         }
-        result.match instanceof RegExp ? mark.markRegExp(result.match) : mark.mark(result.match);
-        dialog.querySelector("mark").scrollIntoView();
         dialog.querySelector("#decompile").remove();
       } catch (e) {
         dialog.querySelector("#decompile").innerText = "Failed to decompile";
         console.error(e);
       }
+      result.match instanceof RegExp ? mark.markRegExp(result.match) : mark.mark(result.match);
+      dialog.querySelector("mark").scrollIntoView();
     });
     document.body.append(dialog);
     dialog.showModal();
