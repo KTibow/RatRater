@@ -639,6 +639,10 @@ Ensure the default browser behavior of the `hidden` attribute.
   background-image: url(low-poly-grid-haikei.svg);
 }
 
+.bg-\[url\(polygon-scatter-haikei\.svg\)\]{
+  background-image: url(polygon-scatter-haikei.svg);
+}
+
 .from-orange-400{
   --tw-gradient-from: #fb923c;
   --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgb(251 146 60 / 0));
@@ -663,6 +667,10 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .bg-\[length\:auto_max\(100\%\2c _500vh\)\]{
   background-size: auto max(100%, 500vh);
+}
+
+.bg-\[length\:auto_max\(100\%\2c _300vh\)\]{
+  background-size: auto max(100%, 300vh);
 }
 
 .bg-no-repeat{
