@@ -673,6 +673,10 @@ Ensure the default browser behavior of the `hidden` attribute.
   background-size: auto max(100%, 300vh);
 }
 
+.bg-\[length\:100\%_auto\]{
+  background-size: 100% auto;
+}
+
 .bg-no-repeat{
   background-repeat: no-repeat;
 }
