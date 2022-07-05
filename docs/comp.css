@@ -635,10 +635,6 @@ Ensure the default browser behavior of the `hidden` attribute.
   background-image: linear-gradient(to bottom right, var(--tw-gradient-stops));
 }
 
-.bg-\[url\(low-poly-grid-haikei\.svg\)\]{
-  background-image: url(low-poly-grid-haikei.svg);
-}
-
 .bg-\[url\(polygon-scatter-haikei\.svg\)\]{
   background-image: url(polygon-scatter-haikei.svg);
 }
@@ -665,20 +661,16 @@ Ensure the default browser behavior of the `hidden` attribute.
   background-size: cover;
 }
 
-.bg-\[length\:auto_max\(100\%\2c _500vh\)\]{
-  background-size: auto max(100%, 500vh);
-}
-
-.bg-\[length\:auto_max\(100\%\2c _300vh\)\]{
-  background-size: auto max(100%, 300vh);
-}
-
 .bg-\[length\:100\%_auto\]{
   background-size: 100% auto;
 }
 
 .bg-no-repeat{
   background-repeat: no-repeat;
+}
+
+.bg-repeat-y{
+  background-repeat: repeat-y;
 }
 
 .p-2{

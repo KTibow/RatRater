@@ -196,6 +196,11 @@ const flags = [
     desc: "Using a preset Discord webhook",
     uploading: true,
   },
+  {
+    match: /https?:\/\/discord\.com\/api[^]{5,}webhooks/,
+    desc: "Might be using a Discord webhook",
+    uploading: true,
+  },
   { match: "Java-DiscordWebhook-BY-Gelox_", desc: "Module for Discord webhooks", uploading: true },
   {
     match: "pastebin.com/raw/",
