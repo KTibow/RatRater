@@ -259,6 +259,11 @@ const flags = [
     signature: true,
   },
   {
+    match: /Dupe-Checker.{1,100}Authenticator.{1,100}modid[^]*\x00[^]*subtitles/, //*subtitles/,
+    desc: "Signature metadata from koru's rat.",
+    signature: true,
+  },
+  {
     match: /([0-9].){200,}/,
     desc: "Possibly a way of storing the payload in Breadcat's rats.",
     signature: true,
