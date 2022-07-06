@@ -201,6 +201,11 @@ const flags = [
     desc: "Might be using a Discord webhook",
     uploading: true,
   },
+  {
+    match: "https://discord.com/api/v8/channels/",
+    desc: "Sending or receiving Discord messages, which might include personal data",
+    uploading: true,
+  },
   { match: "Java-DiscordWebhook-BY-Gelox_", desc: "Module for Discord webhooks", uploading: true },
   {
     match: "pastebin.com/raw/",
@@ -217,7 +222,7 @@ const flags = [
     desc: "Might try to read your session ID from the launch args",
     collection: true,
   },
-  { match: "func_148254_d", desc: "Reads your session ID", collection: true },
+  { match: "func_148254_d", desc: "Authenticates with Mojang's session servers", collection: true },
   { match: "func_111286_b", desc: "Reads your session ID", collection: true },
   {
     match: /session.id/i,
