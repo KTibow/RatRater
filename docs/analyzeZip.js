@@ -7,7 +7,7 @@ import HightlightJS from "https://esm.run/highlight.js";
  * @param {JSZip} zip
  * @param {string} name
  */
-export const analyzeZip = async (zip, name) => {
+export const analyzeZip = async (zip, name, rawData) => {
   const analyzableFiles = Object.values(zip.files).filter((file) => !file.dir);
   document.querySelector("main").innerHTML = `
     RatRater results for ${name}
@@ -36,6 +36,8 @@ export const analyzeZip = async (zip, name) => {
       file: "[part of the jar's comment]",
     });
   }
+  let markdown = `Results for \`${name}\` by RatRater:
+`;
   const obfuscationResults = analyses.filter((result) => result.obfuscation);
   if (obfuscationResults.length > 0) {
     const obfuscationArea = document.createElement("details");
@@ -45,6 +47,9 @@ export const analyzeZip = async (zip, name) => {
         <p>When people make the source code harder to read.</p>
       </summary>
     `);
+    markdown += `**Obfuscation found with ${obfuscationResults.length} triggers**
+*When people make the source code harder to read.*
+`;
     for (const result of obfuscationResults) {
       obfuscationArea.append(createResultTag(result, zip));
     }
@@ -56,8 +61,16 @@ export const analyzeZip = async (zip, name) => {
       <h2 class="bg-zinc-900 p-2 text-3xl rounded-md">Uploading</h2>
       <p>When people upload your data to a server.</p>
     `);
+    markdown += `**Uploading found with ${uploadingResults.length} triggers**
+*When people upload your data to a server.*
+`;
     for (const result of uploadingResults) {
       document.querySelector("main").append(createResultTag(result, zip));
+      markdown += `- \`${result.match}\` found in \`${result.file}\`${
+        result.segment ? `(segment)` : ""
+      }:
+${result.desc}
+`;
     }
   }
   const collectionResults = analyses.filter((result) => result.collection);
@@ -66,8 +79,16 @@ export const analyzeZip = async (zip, name) => {
       <h2 class="bg-zinc-900 p-2 text-3xl rounded-md">Collection</h2>
       <p>When people collect data like your session ID.</p>
     `);
+    markdown += `**Collection found with ${collectionResults.length} triggers**
+*When people collect data like your session ID.*
+`;
     for (const result of collectionResults) {
       document.querySelector("main").append(createResultTag(result, zip));
+      markdown += `- \`${result.match}\` found in \`${result.file}\`${
+        result.segment ? `(segment)` : ""
+      }:
+${result.desc}
+`;
     }
   }
   const signatureResults = analyses.filter((result) => result.signature);
@@ -76,21 +97,48 @@ export const analyzeZip = async (zip, name) => {
       <h2 class="bg-zinc-900 p-2 text-3xl rounded-md">Signatures</h2>
       <p>Marks of known rats.</p>
     `);
+    markdown += `**Signatures found with ${signatureResults.length} triggers**
+*Marks of known rats.*
+`;
     for (const result of signatureResults) {
       document.querySelector("main").append(createResultTag(result, zip));
+      markdown += `- \`${result.match}\` found in \`${result.file}\`${
+        result.segment ? `(segment)` : ""
+      }:
+${result.desc}
+`;
     }
   }
   document.querySelector("main").append(html`
-    <p>
-      That's all the results we found.
-      <button
-        class="bg-orange-500 hover:bg-orange-600 font-bold p-2 rounded-md"
-        onclick="window.print()"
-      >
-        Export to doc
-      </button>
-    </p>
+    <p>That's all the results we found.</p>
   `);
+  if (rawData) {
+    document.querySelector("#deobfuscate").addEventListener("click", async () => {
+      document.querySelector("#deobfuscate").innerHTML = "Deobfuscating...";
+      const formData = new FormData();
+      const blob = new Blob([rawData]);
+      formData.set("to_be_deobfuscated", blob, name);
+      const response = await fetch("https://Decompiler.ktibow.repl.co/deobfuscate", {
+        method: "POST",
+        body: formData,
+      });
+      const deobfuscated = await response.arrayBuffer();
+      let zip;
+      try {
+        zip = await new JSZip().loadAsync(deobfuscated);
+      } catch (e) {
+        alert("Something went wrong while deobfuscating.");
+        console.error(e);
+      }
+      analyzeZip(zip, name);
+    });
+  } else {
+    document.querySelector("#deobfuscate").remove();
+  }
+  document.querySelector("#export").addEventListener("click", async () => {
+    await navigator.clipboard.writeText(markdown);
+    alert("Copied to clipboard!");
+  });
 };
 
 const cache = await caches.open("decompiler-cache");

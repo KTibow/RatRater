@@ -16,7 +16,7 @@ document.querySelector("#filePicker").addEventListener("change", (e) => {
       alert("Something went wrong. It might not be a valid jar.");
       console.error(e);
     }
-    analyzeZip(zip, file.name);
+    analyzeZip(zip, file.name, data);
   };
 });
 document.body.addEventListener(
