@@ -56,6 +56,6 @@ document.body.addEventListener("drop", (e) => {
       alert("Something went wrong. It might not be a valid jar.");
       console.error(e);
     }
-    analyzeZip(zip, file.name);
+    analyzeZip(zip, file.name, data);
   };
 });
