@@ -317,6 +317,7 @@ const flags = [
   },
   { match: "BreadOS/69.420", desc: "Signature from Breadcat's rats.", signature: true },
   { match: "SmolPeePeeEnergy", desc: "Signature from Breadcat's rats.", signature: true },
+  { match: "a/b/c/d.class", desc: "Signature malicious filename from Kodeine.", signature: true },
   { match: /modid.{1,5}Detectme/, desc: "Signature mod ID from Breadcat's rats.", signature: true },
   {
     match: /modid.{1,5}Forge Mod Handler/,
