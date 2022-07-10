@@ -213,8 +213,8 @@ const createResultTag = (result, zip) => {
           for (const line of highlighted.value.split("\n")) {
             const lineTag = document.createElement("span");
             lineTag.innerHTML = line;
-            lineTag.className = "block";
             dialog.querySelector("pre").append(lineTag);
+            dialog.querySelector("pre").append(document.createElement("br"));
           }
           dialog.querySelector("#decompile").remove();
         } catch (e) {
