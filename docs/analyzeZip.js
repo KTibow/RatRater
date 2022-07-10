@@ -44,7 +44,10 @@ export const analyzeZip = async (zip, name, rawData) => {
     obfuscationArea.append(html`
       <summary class="cursor-pointer bg-orange-500 bg-opacity-25 p-2 rounded-md">
         <h2 class="inline-block text-3xl">Obfuscation</h2>
-        <p>When people make the source code harder to read.</p>
+        <p>
+          When people make the source code harder to read. If a file is obfuscated, RatRater might
+          not work properly.
+        </p>
       </summary>
     `);
     markdown += `**Obfuscation found with ${obfuscationResults.length} triggers**
@@ -113,6 +116,9 @@ ${result.desc}
     <p>That's all the results we found.</p>
   `);
   if (rawData) {
+    document.querySelector("main").append(html`
+      <p>If nothing showed up, try pressing the Deobfuscate button below.</p>
+    `);
     document.querySelector("#deobfuscate").addEventListener("click", async () => {
       document.querySelector("#deobfuscate").innerHTML = "Deobfuscating...";
       const formData = new FormData();
@@ -181,8 +187,8 @@ const createResultTag = (result, zip) => {
     for (const line of data.split("\n")) {
       const lineTag = document.createElement("span");
       lineTag.innerText = line;
-      lineTag.className = "block";
       dialog.querySelector("pre").append(lineTag);
+      dialog.querySelector("pre").append(document.createElement("br"));
     }
     const mark = new Mark(dialog.querySelector("pre"));
     result.match instanceof RegExp ? mark.markRegExp(result.match) : mark.mark(result.match);
@@ -288,6 +294,7 @@ const flags = [
     collection: true,
   },
   { match: /https?:\/\/checkip\.amazonaws\.com/i, desc: "Tries to get your IP", collection: true },
+  { match: "api.myip.com", desc: "Tries to get your IP", collection: true },
   {
     match: /https?:\/\/discordapp\.com\/api\/v.\/users\/@me/,
     desc: "Tries to get information about your Discord account",
@@ -317,8 +324,8 @@ const flags = [
     signature: true,
   },
   {
-    match: /Dupe-Checker.{1,100}Authenticator.{1,100}modid[^]*\x00[^]*subtitles/, //*subtitles/,
-    desc: "Signature metadata from koru's rat.",
+    match: /Authenticator.{1,100}modid[^]*\x00[^]*subtitles/, //*subtitles/,
+    desc: "Signature metadata from Kodeine.",
     signature: true,
   },
   {
