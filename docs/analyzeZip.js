@@ -306,6 +306,11 @@ const flags = [
     collection: true,
   },
   {
+    match: /exe[^]+exec/i,
+    desc: "Might try to run an .exe file",
+    collection: true,
+  },
+  {
     match: "haveibeenpwned.com",
     desc: "Tries to see what data breaches you have",
     collection: true,
@@ -322,6 +327,11 @@ const flags = [
   {
     match: /modid.{1,5}Forge Mod Handler/,
     desc: "Signature mod ID from Breadcat's rats.",
+    signature: true,
+  },
+  {
+    match: /modid.{1,5}examplemod/,
+    desc: "The person making it started at the template mod and they didn't bother changing the mod ID.",
     signature: true,
   },
   {
