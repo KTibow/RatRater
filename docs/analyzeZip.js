@@ -220,13 +220,17 @@ const createResultTag = (result, zip) => {
           dialog.querySelector("#decompile").innerText = "Failed to decompile";
           console.error(e);
         }
-        result.match instanceof RegExp ? mark.markRegExp(result.match) : mark.mark(result.match);
+        result.match instanceof RegExp
+          ? mark.markRegExp(result.match, { acrossElements: true })
+          : mark.mark(result.match, { acrossElements: true });
         dialog.querySelector("mark").scrollIntoView();
       });
     }
     document.body.append(dialog);
     dialog.showModal();
-    result.match instanceof RegExp ? mark.markRegExp(result.match) : mark.mark(result.match);
+    result.match instanceof RegExp
+      ? mark.markRegExp(result.match, { acrossElements: true })
+      : mark.mark(result.match, { acrossElements: true });
     dialog.querySelector("mark").scrollIntoView();
   });
   return tag;
