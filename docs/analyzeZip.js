@@ -191,7 +191,6 @@ const createResultTag = (result, zip) => {
       dialog.querySelector("pre").append(document.createElement("br"));
     }
     const mark = new Mark(dialog.querySelector("pre"));
-    result.match instanceof RegExp ? mark.markRegExp(result.match) : mark.mark(result.match);
     if (!result.segment) {
       dialog.querySelector("#decompile").addEventListener("click", async () => {
         dialog.querySelector("#decompile").innerText = "Decompiling...";
@@ -227,6 +226,7 @@ const createResultTag = (result, zip) => {
     }
     document.body.append(dialog);
     dialog.showModal();
+    result.match instanceof RegExp ? mark.markRegExp(result.match) : mark.mark(result.match);
     dialog.querySelector("mark").scrollIntoView();
   });
   return tag;
@@ -306,7 +306,7 @@ const flags = [
     collection: true,
   },
   {
-    match: /exe[^]+exec/i,
+    match: /exe[^]+getRuntime[^]+exec/i,
     desc: "Might try to run an .exe file",
     collection: true,
   },
