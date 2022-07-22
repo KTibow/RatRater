@@ -310,7 +310,7 @@ const flags = [
     collection: true,
   },
   {
-    match: /exe[^]+getRuntime[^]+exec/i,
+    match: /exe[^]{,100}getRuntime[^]{,100}exec/i,
     desc: "Might try to run an .exe file",
     collection: true,
   },
@@ -341,11 +341,6 @@ const flags = [
   {
     match: /Authenticator.{1,100}modid[^]*\x00[^]*subtitles/, //*subtitles/,
     desc: "Signature metadata from Kodeine.",
-    signature: true,
-  },
-  {
-    match: /([0-9].){200,}/,
-    desc: "Possibly a way of storing the payload in Breadcat's rats.",
     signature: true,
   },
   {
