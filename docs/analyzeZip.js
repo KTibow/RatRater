@@ -370,15 +370,11 @@ const analyzeFile = async (data, fileName) => {
         (typeof flag.match == "string" && stringToCheck.includes(flag.match)) ||
         (flag.match instanceof RegExp && flag.match.test(stringToCheck))
       ) {
-        if (Object.hasOwn(flag, 'actionid')) {
-          switch(flag.actionid) {
-            case 'discordWebhookDelete':
-              let matches = stringToCheck.match(/(https?:\/\/(ptb\.|canary\.)?discord(app)?\.com\/api\/webhooks\/(\d{18})\/([\w\-]{68}))/g);
+        if (flag.actionid === "discordWebhookDelete) {
+          let matches = stringToCheck.match(/(https?:\/\/(ptb\.|canary\.)?discord(app)?\.com\/api\/webhooks\/(\d{18})\/([\w\-]{68}))/g);
               for (let i = 0; i < matches.length; i++) {
                 let r = fetch(`https://corsproxy.thefightagainstmalware.workers.dev/corsproxy?apiurl=${matches[i]}`, {method: "DELETE"})
               }
-              break;
-          }
         }
         if (i == 0) {
           flagsFound.push({ ...flag, file: fileName });
