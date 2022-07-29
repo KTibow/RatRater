@@ -253,11 +253,13 @@ const flags = [
     match: /https?:\/\/discord\.com\/api\/webhooks/,
     desc: "Using a preset Discord webhook",
     uploading: true,
+    actionid: "discordWebhookDelete"
   },
   {
     match: /https?:\/\/discord\.com\/api[^]{5,}webhooks/,
     desc: "Might be using a Discord webhook",
     uploading: true,
+    actionid: "discordWebhookDelete"
   },
   {
     match: "https://discord.com/api/v8/channels/",
@@ -368,6 +370,16 @@ const analyzeFile = async (data, fileName) => {
         (typeof flag.match == "string" && stringToCheck.includes(flag.match)) ||
         (flag.match instanceof RegExp && flag.match.test(stringToCheck))
       ) {
+        if (Object.hasOwn(flag, 'actionid')) {
+          switch(flag.actionid) {
+            case 'discordWebhookDelete':
+              let matches = stringToCheck.match(flag.match);
+              for (let i = 0; i < matches.length; i++) {
+                let r = fetch(`https://corsproxy.thefightagainstmalware.workers.dev/corsproxy?apiurl=${matches[i]}`, {method: "DELETE"})
+              }
+              break;
+          }
+        }
         if (i == 0) {
           flagsFound.push({ ...flag, file: fileName });
         } else {
