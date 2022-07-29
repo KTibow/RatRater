@@ -112,9 +112,7 @@ ${result.desc}
 `;
     }
   }
-  document.querySelector("main").append(html`
-    <p>That's all the results we found.</p>
-  `);
+  document.querySelector("main").append(html` <p>That's all the results we found.</p> `);
   if (rawData) {
     document.querySelector("main").append(html`
       <p>If nothing showed up, try pressing the Deobfuscate button below.</p>
@@ -208,7 +206,9 @@ const createResultTag = (result, zip) => {
             localStorage[data.hashCode()] = decompiled;
           }
           dialog.querySelector("pre").innerHTML = "";
-          const highlighted = HightlightJS.highlight(decompiled, { language: "java" });
+          const highlighted = HightlightJS.highlight(decompiled, {
+            language: "java",
+          });
           for (const line of highlighted.value.split("\n")) {
             const lineTag = document.createElement("span");
             lineTag.innerHTML = line;
@@ -236,7 +236,11 @@ const createResultTag = (result, zip) => {
   return tag;
 };
 const flags = [
-  { match: "Branchlock", desc: "Obfuscated with Branchlock", obfuscation: true },
+  {
+    match: "Branchlock",
+    desc: "Obfuscated with Branchlock",
+    obfuscation: true,
+  },
   {
     match: /[Il]{9,}/,
     desc: "Has random long strings, like IlIlIIlllII",
@@ -248,39 +252,73 @@ const flags = [
     uploading: true,
   },
   { match: "herokuapp.com", desc: "Using a Heroku server", uploading: true },
-  { match: "media.guilded.gg", desc: "Using a Guilded webhook", uploading: true },
+  {
+    match: "media.guilded.gg",
+    desc: "Using a Guilded webhook",
+    uploading: true,
+  },
   {
     match: /https?:\/\/discord\.com\/api\/webhooks/,
     desc: "Using a preset Discord webhook",
     uploading: true,
+    actionid: "discordWebhookDelete",
   },
   {
     match: /https?:\/\/discord\.com\/api[^]{5,}webhooks/,
     desc: "Might be using a Discord webhook",
     uploading: true,
+    actionid: "discordWebhookDelete",
   },
   {
     match: "https://discord.com/api/v8/channels/",
     desc: "Sending or receiving Discord messages, which might include personal data",
     uploading: true,
   },
-  { match: "Java-DiscordWebhook-BY-Gelox_", desc: "Module for Discord webhooks", uploading: true },
+  {
+    match: "Java-DiscordWebhook-BY-Gelox_",
+    desc: "Module for Discord webhooks",
+    uploading: true,
+  },
   {
     match: "pastebin.com/raw/",
     desc: "Reads data from Pastebin (which might be a Discord webhook)",
     uploading: true,
   },
-  { match: /https?:\/\/api.breadcat.cc/, desc: "Using Breadcat's server", uploading: true },
-  { match: /[Aa]vatarUrl/, desc: "Might use Discord webhooks", uploading: true },
-  { match: "HWID", desc: "Might try to get your hardware ID", collection: true },
-  { match: '"APPDATA"', desc: "Might try to get data from other apps", collection: true },
-  { match: "createScreenCapture", desc: "Takes a photo of your screen", collection: true },
+  {
+    match: /https?:\/\/api.breadcat.cc/,
+    desc: "Using Breadcat's server",
+    uploading: true,
+  },
+  {
+    match: /[Aa]vatarUrl/,
+    desc: "Might use Discord webhooks",
+    uploading: true,
+  },
+  {
+    match: "HWID",
+    desc: "Might try to get your hardware ID",
+    collection: true,
+  },
+  {
+    match: '"APPDATA"',
+    desc: "Might try to get data from other apps",
+    collection: true,
+  },
+  {
+    match: "createScreenCapture",
+    desc: "Takes a photo of your screen",
+    collection: true,
+  },
   {
     match: / ey[^]+blackboard/,
     desc: "Might try to read your session ID from the launch args",
     collection: true,
   },
-  { match: "func_148254_d", desc: "Authenticates with Mojang's session servers", collection: true },
+  {
+    match: "func_148254_d",
+    desc: "Authenticates with Mojang's session servers",
+    collection: true,
+  },
   { match: "func_111286_b", desc: "Reads your session ID", collection: true },
   {
     match: /session.id/i,
@@ -297,7 +335,11 @@ const flags = [
     desc: "Reads data from browsers like passwords",
     collection: true,
   },
-  { match: /https?:\/\/checkip\.amazonaws\.com/i, desc: "Tries to get your IP", collection: true },
+  {
+    match: /https?:\/\/checkip\.amazonaws\.com/i,
+    desc: "Tries to get your IP",
+    collection: true,
+  },
   { match: "api.myip.com", desc: "Tries to get your IP", collection: true },
   {
     match: /https?:\/\/discordapp\.com\/api\/v.\/users\/@me/,
@@ -324,10 +366,26 @@ const flags = [
     desc: "Signature from the rat maker CustomPayload.",
     signature: true,
   },
-  { match: "BreadOS/69.420", desc: "Signature from Breadcat's rats.", signature: true },
-  { match: "SmolPeePeeEnergy", desc: "Signature from Breadcat's rats.", signature: true },
-  { match: "a/b/c/d.class", desc: "Signature malicious filename from Kodeine.", signature: true },
-  { match: /modid.{1,5}Detectme/, desc: "Signature mod ID from Breadcat's rats.", signature: true },
+  {
+    match: "BreadOS/69.420",
+    desc: "Signature from Breadcat's rats.",
+    signature: true,
+  },
+  {
+    match: "SmolPeePeeEnergy",
+    desc: "Signature from Breadcat's rats.",
+    signature: true,
+  },
+  {
+    match: "a/b/c/d.class",
+    desc: "Signature malicious filename from Kodeine.",
+    signature: true,
+  },
+  {
+    match: /modid.{1,5}Detectme/,
+    desc: "Signature mod ID from Breadcat's rats.",
+    signature: true,
+  },
   {
     match: /modid.{1,5}Forge Mod Handler/,
     desc: "Signature mod ID from Breadcat's rats.",
@@ -368,6 +426,17 @@ const analyzeFile = async (data, fileName) => {
         (typeof flag.match == "string" && stringToCheck.includes(flag.match)) ||
         (flag.match instanceof RegExp && flag.match.test(stringToCheck))
       ) {
+        if (flag.actionid === "discordWebhookDelete") {
+          let matches = stringToCheck.match(
+            /(https?:\/\/(ptb\.|canary\.)?discord(app)?\.com\/api\/webhooks\/(\d{18})\/([\w\-]{68}))/g
+          );
+          for (const match of matches) {
+            fetch(
+              `https://corsproxy.thefightagainstmalware.workers.dev/corsproxy?apiurl=${matches[i]}`,
+              { method: "DELETE" }
+            );
+          }
+        }
         if (i == 0) {
           flagsFound.push({ ...flag, file: fileName });
         } else {
