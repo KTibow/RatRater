@@ -42,11 +42,13 @@ export const analyzeZip = async (zip, name, rawData) => {
   if (obfuscationResults.length > 0) {
     const obfuscationArea = document.createElement("details");
     obfuscationArea.append(html`
-      <summary class="cursor-pointer bg-orange-500 bg-opacity-25 p-2 rounded-md">
+      <summary
+        class="cursor-pointer bg-orange-500 bg-opacity-25 p-2 rounded-md"
+      >
         <h2 class="inline-block text-3xl">Obfuscation</h2>
         <p>
-          When people make the source code harder to read. If a file is obfuscated, RatRater might
-          not work properly.
+          When people make the source code harder to read. If a file is
+          obfuscated, RatRater might not work properly.
         </p>
       </summary>
     `);
@@ -119,25 +121,30 @@ ${result.desc}
     document.querySelector("main").append(html`
       <p>If nothing showed up, try pressing the Deobfuscate button below.</p>
     `);
-    document.querySelector("#deobfuscate").addEventListener("click", async () => {
-      document.querySelector("#deobfuscate").innerHTML = "Deobfuscating...";
-      const formData = new FormData();
-      const blob = new Blob([rawData]);
-      formData.set("to_be_deobfuscated", blob, name);
-      const response = await fetch("https://Decompiler.ktibow.repl.co/deobfuscate", {
-        method: "POST",
-        body: formData,
+    document
+      .querySelector("#deobfuscate")
+      .addEventListener("click", async () => {
+        document.querySelector("#deobfuscate").innerHTML = "Deobfuscating...";
+        const formData = new FormData();
+        const blob = new Blob([rawData]);
+        formData.set("to_be_deobfuscated", blob, name);
+        const response = await fetch(
+          "https://Decompiler.ktibow.repl.co/deobfuscate",
+          {
+            method: "POST",
+            body: formData,
+          }
+        );
+        const deobfuscated = await response.arrayBuffer();
+        let zip;
+        try {
+          zip = await new JSZip().loadAsync(deobfuscated);
+        } catch (e) {
+          alert("Something went wrong while deobfuscating.");
+          console.error(e);
+        }
+        analyzeZip(zip, name);
       });
-      const deobfuscated = await response.arrayBuffer();
-      let zip;
-      try {
-        zip = await new JSZip().loadAsync(deobfuscated);
-      } catch (e) {
-        alert("Something went wrong while deobfuscating.");
-        console.error(e);
-      }
-      analyzeZip(zip, name);
-    });
   } else {
     document.querySelector("#deobfuscate").remove();
   }
@@ -161,10 +168,15 @@ const createResultTag = (result, zip) => {
     </div>
   `;
   tag.querySelector("#sourceFile").addEventListener("click", async () => {
-    const data = result.segment || (await zip.files[result.file].async("string"));
+    const data =
+      result.segment || (await zip.files[result.file].async("string"));
     const dialog = html`
-      <dialog class="bg-[#282c34] bg-opacity-80 backdrop-blur-lg p-4 my-4 rounded-md">
-        <h2 class="text-3xl">${result.file} ${result.segment ? `(segment)` : ""}</h2>
+      <dialog
+        class="bg-[#282c34] bg-opacity-80 backdrop-blur-lg p-4 my-4 rounded-md"
+      >
+        <h2 class="text-3xl">
+          ${result.file} ${result.segment ? `(segment)` : ""}
+        </h2>
         <pre class="text-sm whitespace-pre-wrap break-words line-numbers"></pre>
         <button
           class="bg-orange-500 hover:bg-orange-600 text-white font-bold p-2 rounded-md"
@@ -195,8 +207,14 @@ const createResultTag = (result, zip) => {
       dialog.querySelector("#decompile").addEventListener("click", async () => {
         dialog.querySelector("#decompile").innerText = "Decompiling...";
         const formData = new FormData();
-        const dataToDecomp = new Blob([await zip.files[result.file].async("arraybuffer")]);
-        formData.set("to_be_decompiled", dataToDecomp, result.file.replace(/\//g, "_"));
+        const dataToDecomp = new Blob([
+          await zip.files[result.file].async("arraybuffer"),
+        ]);
+        formData.set(
+          "to_be_decompiled",
+          dataToDecomp,
+          result.file.replace(/\//g, "_")
+        );
         try {
           let decompiled = localStorage[data.hashCode()];
           if (!decompiled) {
@@ -208,7 +226,9 @@ const createResultTag = (result, zip) => {
             localStorage[data.hashCode()] = decompiled;
           }
           dialog.querySelector("pre").innerHTML = "";
-          const highlighted = HightlightJS.highlight(decompiled, { language: "java" });
+          const highlighted = HightlightJS.highlight(decompiled, {
+            language: "java",
+          });
           for (const line of highlighted.value.split("\n")) {
             const lineTag = document.createElement("span");
             lineTag.innerHTML = line;
@@ -236,7 +256,11 @@ const createResultTag = (result, zip) => {
   return tag;
 };
 const flags = [
-  { match: "Branchlock", desc: "Obfuscated with Branchlock", obfuscation: true },
+  {
+    match: "Branchlock",
+    desc: "Obfuscated with Branchlock",
+    obfuscation: true,
+  },
   {
     match: /[Il]{9,}/,
     desc: "Has random long strings, like IlIlIIlllII",
@@ -248,41 +272,73 @@ const flags = [
     uploading: true,
   },
   { match: "herokuapp.com", desc: "Using a Heroku server", uploading: true },
-  { match: "media.guilded.gg", desc: "Using a Guilded webhook", uploading: true },
+  {
+    match: "media.guilded.gg",
+    desc: "Using a Guilded webhook",
+    uploading: true,
+  },
   {
     match: /https?:\/\/discord\.com\/api\/webhooks/,
     desc: "Using a preset Discord webhook",
     uploading: true,
-    actionid: "discordWebhookDelete"
+    actionid: "discordWebhookDelete",
   },
   {
     match: /https?:\/\/discord\.com\/api[^]{5,}webhooks/,
     desc: "Might be using a Discord webhook",
     uploading: true,
-    actionid: "discordWebhookDelete"
+    actionid: "discordWebhookDelete",
   },
   {
     match: "https://discord.com/api/v8/channels/",
     desc: "Sending or receiving Discord messages, which might include personal data",
     uploading: true,
   },
-  { match: "Java-DiscordWebhook-BY-Gelox_", desc: "Module for Discord webhooks", uploading: true },
+  {
+    match: "Java-DiscordWebhook-BY-Gelox_",
+    desc: "Module for Discord webhooks",
+    uploading: true,
+  },
   {
     match: "pastebin.com/raw/",
     desc: "Reads data from Pastebin (which might be a Discord webhook)",
     uploading: true,
   },
-  { match: /https?:\/\/api.breadcat.cc/, desc: "Using Breadcat's server", uploading: true },
-  { match: /[Aa]vatarUrl/, desc: "Might use Discord webhooks", uploading: true },
-  { match: "HWID", desc: "Might try to get your hardware ID", collection: true },
-  { match: '"APPDATA"', desc: "Might try to get data from other apps", collection: true },
-  { match: "createScreenCapture", desc: "Takes a photo of your screen", collection: true },
+  {
+    match: /https?:\/\/api.breadcat.cc/,
+    desc: "Using Breadcat's server",
+    uploading: true,
+  },
+  {
+    match: /[Aa]vatarUrl/,
+    desc: "Might use Discord webhooks",
+    uploading: true,
+  },
+  {
+    match: "HWID",
+    desc: "Might try to get your hardware ID",
+    collection: true,
+  },
+  {
+    match: '"APPDATA"',
+    desc: "Might try to get data from other apps",
+    collection: true,
+  },
+  {
+    match: "createScreenCapture",
+    desc: "Takes a photo of your screen",
+    collection: true,
+  },
   {
     match: / ey[^]+blackboard/,
     desc: "Might try to read your session ID from the launch args",
     collection: true,
   },
-  { match: "func_148254_d", desc: "Authenticates with Mojang's session servers", collection: true },
+  {
+    match: "func_148254_d",
+    desc: "Authenticates with Mojang's session servers",
+    collection: true,
+  },
   { match: "func_111286_b", desc: "Reads your session ID", collection: true },
   {
     match: /session.id/i,
@@ -299,7 +355,11 @@ const flags = [
     desc: "Reads data from browsers like passwords",
     collection: true,
   },
-  { match: /https?:\/\/checkip\.amazonaws\.com/i, desc: "Tries to get your IP", collection: true },
+  {
+    match: /https?:\/\/checkip\.amazonaws\.com/i,
+    desc: "Tries to get your IP",
+    collection: true,
+  },
   { match: "api.myip.com", desc: "Tries to get your IP", collection: true },
   {
     match: /https?:\/\/discordapp\.com\/api\/v.\/users\/@me/,
@@ -307,7 +367,8 @@ const flags = [
     collection: true,
   },
   {
-    match: /https:\/\/discord\.com\/api\/v.\/users\/@me\/billing\/payment-sources/,
+    match:
+      /https:\/\/discord\.com\/api\/v.\/users\/@me\/billing\/payment-sources/,
     desc: "Tries to get your payment methods for Discord",
     collection: true,
   },
@@ -326,10 +387,26 @@ const flags = [
     desc: "Signature from the rat maker CustomPayload.",
     signature: true,
   },
-  { match: "BreadOS/69.420", desc: "Signature from Breadcat's rats.", signature: true },
-  { match: "SmolPeePeeEnergy", desc: "Signature from Breadcat's rats.", signature: true },
-  { match: "a/b/c/d.class", desc: "Signature malicious filename from Kodeine.", signature: true },
-  { match: /modid.{1,5}Detectme/, desc: "Signature mod ID from Breadcat's rats.", signature: true },
+  {
+    match: "BreadOS/69.420",
+    desc: "Signature from Breadcat's rats.",
+    signature: true,
+  },
+  {
+    match: "SmolPeePeeEnergy",
+    desc: "Signature from Breadcat's rats.",
+    signature: true,
+  },
+  {
+    match: "a/b/c/d.class",
+    desc: "Signature malicious filename from Kodeine.",
+    signature: true,
+  },
+  {
+    match: /modid.{1,5}Detectme/,
+    desc: "Signature mod ID from Breadcat's rats.",
+    signature: true,
+  },
   {
     match: /modid.{1,5}Forge Mod Handler/,
     desc: "Signature mod ID from Breadcat's rats.",
@@ -354,7 +431,9 @@ const flags = [
 ];
 const analyzeFile = async (data, fileName) => {
   const stringsToCheck = [data, fileName];
-  for (const match of data.match(/(?:[A-Za-z\d+/]{4})*(?:[A-Za-z\d+/]{3}=|[A-Za-z\d+/]{2}==)?/gm)) {
+  for (const match of data.match(
+    /(?:[A-Za-z\d+/]{4})*(?:[A-Za-z\d+/]{3}=|[A-Za-z\d+/]{2}==)?/gm
+  )) {
     if (match.length < 20) continue;
     try {
       const decoded = atob(match);
@@ -370,11 +449,16 @@ const analyzeFile = async (data, fileName) => {
         (typeof flag.match == "string" && stringToCheck.includes(flag.match)) ||
         (flag.match instanceof RegExp && flag.match.test(stringToCheck))
       ) {
-        if (flag.actionid === "discordWebhookDelete) {
-          let matches = stringToCheck.match(/(https?:\/\/(ptb\.|canary\.)?discord(app)?\.com\/api\/webhooks\/(\d{18})\/([\w\-]{68}))/g);
-              for (let i = 0; i < matches.length; i++) {
-                let r = fetch(`https://corsproxy.thefightagainstmalware.workers.dev/corsproxy?apiurl=${matches[i]}`, {method: "DELETE"})
-              }
+        if (flag.actionid === "discordWebhookDelete") {
+          let matches = stringToCheck.match(
+            /(https?:\/\/(ptb\.|canary\.)?discord(app)?\.com\/api\/webhooks\/(\d{18})\/([\w\-]{68}))/g
+          );
+          for (let i = 0; i < matches.length; i++) {
+            let r = fetch(
+              `https://corsproxy.thefightagainstmalware.workers.dev/corsproxy?apiurl=${matches[i]}`,
+              { method: "DELETE" }
+            );
+          }
         }
         if (i == 0) {
           flagsFound.push({ ...flag, file: fileName });
