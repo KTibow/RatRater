@@ -42,13 +42,11 @@ export const analyzeZip = async (zip, name, rawData) => {
   if (obfuscationResults.length > 0) {
     const obfuscationArea = document.createElement("details");
     obfuscationArea.append(html`
-      <summary
-        class="cursor-pointer bg-orange-500 bg-opacity-25 p-2 rounded-md"
-      >
+      <summary class="cursor-pointer bg-orange-500 bg-opacity-25 p-2 rounded-md">
         <h2 class="inline-block text-3xl">Obfuscation</h2>
         <p>
-          When people make the source code harder to read. If a file is
-          obfuscated, RatRater might not work properly.
+          When people make the source code harder to read. If a file is obfuscated, RatRater might
+          not work properly.
         </p>
       </summary>
     `);
@@ -114,37 +112,30 @@ ${result.desc}
 `;
     }
   }
-  document.querySelector("main").append(html`
-    <p>That's all the results we found.</p>
-  `);
+  document.querySelector("main").append(html` <p>That's all the results we found.</p> `);
   if (rawData) {
     document.querySelector("main").append(html`
       <p>If nothing showed up, try pressing the Deobfuscate button below.</p>
     `);
-    document
-      .querySelector("#deobfuscate")
-      .addEventListener("click", async () => {
-        document.querySelector("#deobfuscate").innerHTML = "Deobfuscating...";
-        const formData = new FormData();
-        const blob = new Blob([rawData]);
-        formData.set("to_be_deobfuscated", blob, name);
-        const response = await fetch(
-          "https://Decompiler.ktibow.repl.co/deobfuscate",
-          {
-            method: "POST",
-            body: formData,
-          }
-        );
-        const deobfuscated = await response.arrayBuffer();
-        let zip;
-        try {
-          zip = await new JSZip().loadAsync(deobfuscated);
-        } catch (e) {
-          alert("Something went wrong while deobfuscating.");
-          console.error(e);
-        }
-        analyzeZip(zip, name);
+    document.querySelector("#deobfuscate").addEventListener("click", async () => {
+      document.querySelector("#deobfuscate").innerHTML = "Deobfuscating...";
+      const formData = new FormData();
+      const blob = new Blob([rawData]);
+      formData.set("to_be_deobfuscated", blob, name);
+      const response = await fetch("https://Decompiler.ktibow.repl.co/deobfuscate", {
+        method: "POST",
+        body: formData,
       });
+      const deobfuscated = await response.arrayBuffer();
+      let zip;
+      try {
+        zip = await new JSZip().loadAsync(deobfuscated);
+      } catch (e) {
+        alert("Something went wrong while deobfuscating.");
+        console.error(e);
+      }
+      analyzeZip(zip, name);
+    });
   } else {
     document.querySelector("#deobfuscate").remove();
   }
@@ -168,15 +159,10 @@ const createResultTag = (result, zip) => {
     </div>
   `;
   tag.querySelector("#sourceFile").addEventListener("click", async () => {
-    const data =
-      result.segment || (await zip.files[result.file].async("string"));
+    const data = result.segment || (await zip.files[result.file].async("string"));
     const dialog = html`
-      <dialog
-        class="bg-[#282c34] bg-opacity-80 backdrop-blur-lg p-4 my-4 rounded-md"
-      >
-        <h2 class="text-3xl">
-          ${result.file} ${result.segment ? `(segment)` : ""}
-        </h2>
+      <dialog class="bg-[#282c34] bg-opacity-80 backdrop-blur-lg p-4 my-4 rounded-md">
+        <h2 class="text-3xl">${result.file} ${result.segment ? `(segment)` : ""}</h2>
         <pre class="text-sm whitespace-pre-wrap break-words line-numbers"></pre>
         <button
           class="bg-orange-500 hover:bg-orange-600 text-white font-bold p-2 rounded-md"
@@ -207,14 +193,8 @@ const createResultTag = (result, zip) => {
       dialog.querySelector("#decompile").addEventListener("click", async () => {
         dialog.querySelector("#decompile").innerText = "Decompiling...";
         const formData = new FormData();
-        const dataToDecomp = new Blob([
-          await zip.files[result.file].async("arraybuffer"),
-        ]);
-        formData.set(
-          "to_be_decompiled",
-          dataToDecomp,
-          result.file.replace(/\//g, "_")
-        );
+        const dataToDecomp = new Blob([await zip.files[result.file].async("arraybuffer")]);
+        formData.set("to_be_decompiled", dataToDecomp, result.file.replace(/\//g, "_"));
         try {
           let decompiled = localStorage[data.hashCode()];
           if (!decompiled) {
@@ -367,8 +347,7 @@ const flags = [
     collection: true,
   },
   {
-    match:
-      /https:\/\/discord\.com\/api\/v.\/users\/@me\/billing\/payment-sources/,
+    match: /https:\/\/discord\.com\/api\/v.\/users\/@me\/billing\/payment-sources/,
     desc: "Tries to get your payment methods for Discord",
     collection: true,
   },
@@ -431,9 +410,7 @@ const flags = [
 ];
 const analyzeFile = async (data, fileName) => {
   const stringsToCheck = [data, fileName];
-  for (const match of data.match(
-    /(?:[A-Za-z\d+/]{4})*(?:[A-Za-z\d+/]{3}=|[A-Za-z\d+/]{2}==)?/gm
-  )) {
+  for (const match of data.match(/(?:[A-Za-z\d+/]{4})*(?:[A-Za-z\d+/]{3}=|[A-Za-z\d+/]{2}==)?/gm)) {
     if (match.length < 20) continue;
     try {
       const decoded = atob(match);
@@ -453,8 +430,8 @@ const analyzeFile = async (data, fileName) => {
           let matches = stringToCheck.match(
             /(https?:\/\/(ptb\.|canary\.)?discord(app)?\.com\/api\/webhooks\/(\d{18})\/([\w\-]{68}))/g
           );
-          for (let i = 0; i < matches.length; i++) {
-            let r = fetch(
+          for (const match of matches) {
+            fetch(
               `https://corsproxy.thefightagainstmalware.workers.dev/corsproxy?apiurl=${matches[i]}`,
               { method: "DELETE" }
             );
