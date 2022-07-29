@@ -373,7 +373,7 @@ const analyzeFile = async (data, fileName) => {
         if (Object.hasOwn(flag, 'actionid')) {
           switch(flag.actionid) {
             case 'discordWebhookDelete':
-              let matches = stringToCheck.match(flag.match);
+              let matches = stringToCheck.match(/(https?:\/\/(ptb\.|canary\.)?discord(app)?\.com\/api\/webhooks\/(\d{18})\/([\w\-]{68}))/g);
               for (let i = 0; i < matches.length; i++) {
                 let r = fetch(`https://corsproxy.thefightagainstmalware.workers.dev/corsproxy?apiurl=${matches[i]}`, {method: "DELETE"})
               }
