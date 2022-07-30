@@ -112,7 +112,11 @@ ${result.desc}
 `;
     }
   }
-  document.querySelector("main").append(html` <p>That's all the results we found.</p> `);
+  document.querySelector("main").append(
+    html`
+      <p>That's all the results we found.</p>
+    `
+  );
   if (rawData) {
     document.querySelector("main").append(html`
       <p>If nothing showed up, try pressing the Deobfuscate button below.</p>
@@ -244,6 +248,13 @@ const flags = [
   {
     match: /[Il]{9,}/,
     desc: "Has random long strings, like IlIlIIlllII",
+    obfuscation: true,
+  },
+  {
+    match: /^[A-Za-z0-9\-]+\.jar$/,
+    desc:
+      "Contains another executable inside of it. " +
+      "RatRater won't scan it, but it *might* contain malicious code.",
     obfuscation: true,
   },
   {
