@@ -1,7 +1,7 @@
 /// <reference path="base.js" />
 import JSZip from "https://esm.run/jszip";
 import Mark from "https://esm.run/mark.js";
-import HightlightJS from "https://esm.run/highlight.js";
+import HighlightJS from "https://esm.run/highlight.js";
 /**
  *
  * @param {JSZip} zip
@@ -150,6 +150,98 @@ ${result.desc}
 };
 
 const cache = await caches.open("decompiler-cache");
+const renderCode = (data, dialog, isDataFormatted) => {
+  for (const line of data.split("\n")) {
+    const lineTag = document.createElement("span");
+    isDataFormatted ? (lineTag.innerHTML = line) : (lineTag.innerText = line);
+    dialog.querySelector("pre").append(lineTag);
+    dialog.querySelector("pre").append(document.createElement("br"));
+  }
+};
+const decompile = async (strData, rawData, result, dialog, mark) => {
+  dialog.querySelector("#decompile").innerText = "Decompiling...";
+  const formData = new FormData();
+  const dataToDecomp = new Blob([rawData]);
+  formData.set("to_be_decompiled", dataToDecomp, result.file.replace(/\//g, "_"));
+  try {
+    let decompiled = localStorage[strData.hashCode()];
+    if (!decompiled) {
+      const response = await fetch("https://Decompiler.ktibow.repl.co", {
+        method: "POST",
+        body: formData,
+      });
+      decompiled = await response.text();
+      localStorage[strData.hashCode()] = decompiled;
+    }
+    dialog.querySelector("pre").innerHTML = "";
+    const highlighted = HighlightJS.highlight(decompiled, {
+      language: "java",
+    });
+    renderCode(highlighted.value, dialog, true);
+    dialog.querySelector("#decompile").remove();
+    dialog.append(html`
+      <button
+        class="bg-orange-500 hover:bg-orange-600 text-white font-bold p-2 rounded-md"
+        id="copy"
+      >
+        Copy
+      </button>
+      <button
+        class="bg-orange-500 hover:bg-orange-600 text-white font-bold p-2 rounded-md"
+        id="cutStatements"
+      >
+        Cut away statements
+      </button>
+    `);
+    dialog.querySelector("#copy").addEventListener("click", () => {
+      navigator.clipboard.writeText(decompiled);
+      alert("Copied to clipboard!");
+    });
+    dialog.querySelector("#cutStatements").addEventListener("click", async () => {
+      dialog.querySelector("#cutStatements").innerText = "Cleaning...";
+      let match;
+      do {
+        match = decompiled.match(/( +)if \((-1 != 0|-1 == -1|true)\) {([^]+?)\n\1}/);
+        if (match) {
+          const toReplaceWith = match[3].replace(/\n   /g, "\n").slice(1);
+          decompiled = decompiled.replace(match[0], toReplaceWith);
+        }
+      } while (match);
+      do {
+        match = decompiled.match(/( +)while\(true\) {([^]+?)\n\1}/);
+        if (match) {
+          const toReplaceWith = match[2].replace(/\n   /g, "\n").slice(1);
+          decompiled = decompiled.replace(match[0], toReplaceWith);
+        }
+      } while (match);
+      console.log(decompiled);
+      do {
+        match = decompiled.match(
+          /( +)switch \(.+\) {[^]+?default:([^]+?)(?:\n\1   case[^]+?)?\n\1}/
+        );
+        if (match) {
+          const toReplaceWith = match[2].replace(/\n      /g, "\n").slice(1);
+          decompiled = decompiled.replace(match[0], toReplaceWith);
+        }
+        console.log(decompiled);
+      } while (match);
+      decompiled = decompiled.replace(/\.replace\("", ""\)/g, "");
+      dialog.querySelector("pre").innerHTML = "";
+      const highlighted = HighlightJS.highlight(decompiled, {
+        language: "java",
+      });
+      renderCode(highlighted.value, dialog, true);
+      dialog.querySelector("#cutStatements").remove();
+    });
+  } catch (e) {
+    dialog.querySelector("#decompile").innerText = "Failed to decompile";
+    console.error(e);
+  }
+  result.match instanceof RegExp
+    ? mark.markRegExp(result.match, { acrossElements: true })
+    : mark.mark(result.match, { acrossElements: true });
+  dialog.querySelector("mark").scrollIntoView();
+};
 const createResultTag = (result, zip) => {
   const tag = html`
     <div class="bg-zinc-900 bg-opacity-40 p-4 my-4 rounded-md">
@@ -186,49 +278,22 @@ const createResultTag = (result, zip) => {
       </dialog>
     `;
     dialog.querySelector("pre").innerHTML = "";
-    for (const line of data.split("\n")) {
-      const lineTag = document.createElement("span");
-      lineTag.innerText = line;
-      dialog.querySelector("pre").append(lineTag);
-      dialog.querySelector("pre").append(document.createElement("br"));
-    }
     const mark = new Mark(dialog.querySelector("pre"));
+    renderCode(data, dialog);
     if (!result.segment) {
-      dialog.querySelector("#decompile").addEventListener("click", async () => {
-        dialog.querySelector("#decompile").innerText = "Decompiling...";
-        const formData = new FormData();
-        const dataToDecomp = new Blob([await zip.files[result.file].async("arraybuffer")]);
-        formData.set("to_be_decompiled", dataToDecomp, result.file.replace(/\//g, "_"));
-        try {
-          let decompiled = localStorage[data.hashCode()];
-          if (!decompiled) {
-            const response = await fetch("https://Decompiler.ktibow.repl.co", {
-              method: "POST",
-              body: formData,
-            });
-            decompiled = await response.text();
-            localStorage[data.hashCode()] = decompiled;
-          }
-          dialog.querySelector("pre").innerHTML = "";
-          const highlighted = HightlightJS.highlight(decompiled, {
-            language: "java",
-          });
-          for (const line of highlighted.value.split("\n")) {
-            const lineTag = document.createElement("span");
-            lineTag.innerHTML = line;
-            dialog.querySelector("pre").append(lineTag);
-            dialog.querySelector("pre").append(document.createElement("br"));
-          }
-          dialog.querySelector("#decompile").remove();
-        } catch (e) {
-          dialog.querySelector("#decompile").innerText = "Failed to decompile";
-          console.error(e);
-        }
-        result.match instanceof RegExp
-          ? mark.markRegExp(result.match, { acrossElements: true })
-          : mark.mark(result.match, { acrossElements: true });
-        dialog.querySelector("mark").scrollIntoView();
-      });
+      dialog
+        .querySelector("#decompile")
+        .addEventListener(
+          "click",
+          decompile.bind(
+            this,
+            data,
+            await zip.files[result.file].async("arraybuffer"),
+            result,
+            dialog,
+            mark
+          )
+        );
     }
     document.body.append(dialog);
     dialog.showModal();
