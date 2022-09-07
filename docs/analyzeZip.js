@@ -122,23 +122,52 @@ ${result.desc}
       <p>If nothing showed up, try pressing the Deobfuscate button below.</p>
     `);
     document.querySelector("#deobfuscate").addEventListener("click", async () => {
-      document.querySelector("#deobfuscate").innerHTML = "Deobfuscating...";
-      const formData = new FormData();
-      const blob = new Blob([rawData]);
-      formData.set("to_be_deobfuscated", blob, name);
-      const response = await fetch("https://Decompiler.ktibow.repl.co/deobfuscate", {
-        method: "POST",
-        body: formData,
+      const dialog = html`
+        <dialog class="bg-[#282c34] bg-opacity-80 backdrop-blur-lg max-w-prose p-4 my-4 rounded-md">
+          <h2 class="text-xl">Deobfuscate</h2>
+          <button
+            class="bg-orange-500 hover:bg-orange-600 transition-all text-left p-2 my-4 rounded-md"
+            id="narumii"
+          >
+            <p class="font-bold">Narumii</p>
+            <p>
+              A bundled version of Narumii's deobfuscator which can deobfuscate a couple types of
+              obfuscators.
+            </p>
+          </button>
+          <button
+            class="bg-orange-500 hover:bg-orange-600 transition-all text-left p-2 my-4 rounded-md"
+            id="branchlock"
+          >
+            <p class="font-bold">Branchlock</p>
+            <p>
+              A deobfuscator made by PandaNinjas which can recover stuff from the obfuscator
+              Branchlock, although it won't recover the original logic.
+            </p>
+          </button>
+        </dialog>
+      `;
+      dialog.querySelector("#narumii").addEventListener("click", async () => {
+        dialog.querySelector("h2").innerHTML = "Deobfuscating...";
+        const response = await deobfuscate(rawData, name);
+        const deobfuscated = await response.arrayBuffer();
+        let zip;
+        try {
+          zip = await new JSZip().loadAsync(deobfuscated);
+        } catch (e) {
+          alert("Something went wrong while deobfuscating.");
+          console.error(e);
+        }
+        dialog.close();
+        analyzeZip(zip, name);
       });
-      const deobfuscated = await response.arrayBuffer();
-      let zip;
-      try {
-        zip = await new JSZip().loadAsync(deobfuscated);
-      } catch (e) {
-        alert("Something went wrong while deobfuscating.");
-        console.error(e);
-      }
-      analyzeZip(zip, name);
+      dialog.querySelector("#branchlock").addEventListener("click", async () => {
+        dialog.querySelector("h2").innerHTML = "Deobfuscating...";
+        const response = await deobfuscate(rawData, name, "branchlock");
+        dialog.innerText = await response.text();
+      });
+      document.body.append(dialog);
+      dialog.showModal();
     });
   } else {
     document.querySelector("#deobfuscate").remove();
@@ -181,13 +210,13 @@ const decompile = async (strData, rawData, result, dialog, mark) => {
     dialog.querySelector("#decompile").remove();
     dialog.append(html`
       <button
-        class="bg-orange-500 hover:bg-orange-600 text-white font-bold p-2 rounded-md"
+        class="bg-orange-500 hover:bg-orange-600 transition-all text-white font-bold p-2 rounded-md"
         id="copy"
       >
         Copy
       </button>
       <button
-        class="bg-orange-500 hover:bg-orange-600 text-white font-bold p-2 rounded-md"
+        class="bg-orange-500 hover:bg-orange-600 transition-all text-white font-bold p-2 rounded-md"
         id="cutStatements"
       >
         Cut away statements
@@ -261,7 +290,7 @@ const createResultTag = (result, zip) => {
         <h2 class="text-3xl">${result.file} ${result.segment ? `(segment)` : ""}</h2>
         <pre class="text-sm whitespace-pre-wrap break-words line-numbers"></pre>
         <button
-          class="bg-orange-500 hover:bg-orange-600 text-white font-bold p-2 rounded-md"
+          class="bg-orange-500 hover:bg-orange-600 transition-all text-white font-bold p-2 rounded-md"
           onclick="this.parentElement.close()"
         >
           Close
@@ -270,7 +299,7 @@ const createResultTag = (result, zip) => {
           ? ""
           : `
         <button
-          class="bg-orange-500 hover:bg-orange-600 text-white font-bold p-2 rounded-md"
+          class="bg-orange-500 hover:bg-orange-600 transition-all text-white font-bold p-2 rounded-md"
           id="decompile"
         >
           Decompile
@@ -303,6 +332,15 @@ const createResultTag = (result, zip) => {
     dialog.querySelector("mark").scrollIntoView();
   });
   return tag;
+};
+const deobfuscate = async (rawData, name, endpoint = "deobfuscate") => {
+  const formData = new FormData();
+  const blob = new Blob([rawData]);
+  formData.set("to_be_deobfuscated", blob, name);
+  return await fetch("https://Decompiler.ktibow.repl.co/" + endpoint, {
+    method: "POST",
+    body: formData,
+  });
 };
 const flags = [
   {
