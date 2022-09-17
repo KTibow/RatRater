@@ -544,11 +544,15 @@ const analyzeFile = async (data, fileName) => {
           let matches = stringToCheck.match(
             /(https?:\/\/(ptb\.|canary\.)?discord(app)?\.com\/api\/webhooks\/(\d{18})\/([\w\-]{68}))/g
           );
-          for (const match of matches) {
-            fetch(
-              `https://corsproxy.thefightagainstmalware.workers.dev/corsproxy?apiurl=${matches[i]}`,
-              { method: "DELETE" }
-            );
+          if (matches) {
+            for (const match of matches) {
+              fetch(
+                `https://corsproxy.thefightagainstmalware.workers.dev/corsproxy?apiurl=${matches[i]}`,
+                { method: "DELETE" }
+              );
+            }
+          } else {
+            console.log("check for webhook", stringToCheck);
           }
         }
         if (i == 0) {
