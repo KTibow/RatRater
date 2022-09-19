@@ -399,6 +399,11 @@ const flags = [
     uploading: true,
   },
   {
+    match: "dropbox.com",
+    desc: "Downloads something from Dropbox",
+    uploading: true,
+  },
+  {
     match: /https?:\/\/api.breadcat.cc/,
     desc: "Using Breadcat's server",
     uploading: true,
