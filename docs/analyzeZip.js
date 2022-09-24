@@ -40,7 +40,7 @@ export const analyzeZip = async (zip, name, rawData) => {
     analyses.push({
       match: ".gitkeep",
       desc: ".gitkeep file most likely used by a dreamys stealer",
-      obfuscation: false,
+      signature: true,
       file: "[an empty file in the jar]"
     });
   }
