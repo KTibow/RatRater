@@ -366,6 +366,7 @@ const flags = [
     uploading: true,
   },
   { match: "herokuapp.com", desc: "Using a Heroku server", uploading: true },
+  { match: "localhost", desc: "This ratter was so f-ing dumb they forgot to make it upload to their own server instead of sending the data to their local computer", uploading: true },
   {
     match: "media.guilded.gg",
     desc: "Using a Guilded webhook",
@@ -493,6 +494,11 @@ const flags = [
   {
     match: "SmolPeePeeEnergy",
     desc: "Signature from Breadcat's rats.",
+    signature: true,
+  },
+  {
+    match: "probs using discord on browser/phone",
+    desc: "Signature from the ILoveRat rat.",
     signature: true,
   },
   {
