@@ -526,6 +526,11 @@ const flags = [
     desc: "Definitely a way of storing the payload in Breadcat's rats.",
     signature: true,
   },
+  {
+    match: ".gitkeep",
+    desc: ".gitkeep file most likely used by a Dreamys stealer",
+    signature: true,
+  }
 ];
 const analyzeFile = async (data, fileName) => {
   const stringsToCheck = [data, fileName];
