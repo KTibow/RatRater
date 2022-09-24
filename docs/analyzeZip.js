@@ -36,6 +36,14 @@ export const analyzeZip = async (zip, name, rawData) => {
       file: "[part of the jar's comment]",
     });
   }
+  if (zip.file(".gitkeep") !== null) {
+    analyses.push({
+      match: ".gitkeep",
+      desc: ".gitkeep file most likely used by a dreamys stealer",
+      obfuscation: false,
+      file: "[an empty file in the jar]"
+    });
+  }
   let markdown = `Results for \`${name}\` by RatRater:
 `;
   const obfuscationResults = analyses.filter((result) => result.obfuscation);
