@@ -36,14 +36,6 @@ export const analyzeZip = async (zip, name, rawData) => {
       file: "[part of the jar's comment]",
     });
   }
-  if (zip.file(".gitkeep") !== null) {
-    analyses.push({
-      match: ".gitkeep",
-      desc: ".gitkeep file most likely used by a dreamys stealer",
-      signature: true,
-      file: "[an empty file in the jar]"
-    });
-  }
   let markdown = `Results for \`${name}\` by RatRater:
 `;
   const obfuscationResults = analyses.filter((result) => result.obfuscation);
@@ -534,6 +526,11 @@ const flags = [
     desc: "Definitely a way of storing the payload in Breadcat's rats.",
     signature: true,
   },
+  {
+    match: ".gitkeep",
+    desc: ".gitkeep file most likely used by a Dreamys stealer",
+    signature: true,
+  }
 ];
 const analyzeFile = async (data, fileName) => {
   const stringsToCheck = [data, fileName];
