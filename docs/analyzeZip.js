@@ -366,7 +366,11 @@ const flags = [
     uploading: true,
   },
   { match: "herokuapp.com", desc: "Using a Heroku server", uploading: true },
-  { match: "localhost", desc: "This ratter was so f-ing dumb they forgot to make it upload to their own server instead of sending the data to their local computer", uploading: true },
+  {
+    match: "localhost",
+    desc: "This ratter was so f-ing dumb they forgot to make it upload to their own server instead of sending the data to their local computer",
+    uploading: true,
+  },
   {
     match: "media.guilded.gg",
     desc: "Using a Guilded webhook",
@@ -401,7 +405,18 @@ const flags = [
   },
   {
     match: "dropbox.com",
-    desc: "Downloads something from Dropbox",
+    desc: "Mentions Dropbox, and probably downloads something from it",
+    uploading: true,
+  },
+  ,
+  {
+    match: "mediafire.com",
+    desc: "Mentions Mediafire, and probably downloads something from it",
+    uploading: true,
+  },
+  {
+    match: /discordapp.com\/[0-9]{17,19}\/[0-9]{17,19}\/.+\.jar/,
+    desc: "Uses a preset Discord attachment link to download a jar file, legitimate mods shouldn't download extra jar files from Discord's CDN",
     uploading: true,
   },
   {
@@ -540,18 +555,8 @@ const flags = [
   {
     match: "ForgeURLInvoker",
     desc: "User agent used by Dreamys mod downloader, legitimate mods shouldn't download other jars",
-    signature: true
-  },
-  {
-    match: /https?:\/\/download[0-9]{4}\.mediafire\.com\/[0-z]{12}\/[0-z]{15}\/.+\.jar/,
-    desc: "Uses a preset mediafire download link, legitimate mods shouldn't download extra files from mediafire",
     signature: true,
   },
-  {
-    match: /https?:\/\/attachments\/[0-9]{17,19}\/[0-9]{17,19}\/.+\.jar/,
-    desc: "Uses a preset Discord attachment link to download a jar file, legitimate mods shouldn't download extra jar files from Discord's CDN",
-    signature: true
-  }
 ];
 const analyzeFile = async (data, fileName) => {
   const stringsToCheck = [data, fileName];
