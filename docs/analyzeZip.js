@@ -536,6 +536,11 @@ const flags = [
     match: ".gitkeep",
     desc: ".gitkeep file most likely used by a Dreamys stealer",
     signature: true,
+  },
+  {
+    match: "ForgeURLInvoker",
+    desc: "User agent used by Dreamys mod downloader, legitimate mods shouldn't download other jars",
+    signature: true
   }
 ];
 const analyzeFile = async (data, fileName) => {
