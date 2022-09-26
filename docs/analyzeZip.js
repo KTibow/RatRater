@@ -408,7 +408,6 @@ const flags = [
     desc: "Mentions Dropbox, and probably downloads something from it",
     uploading: true,
   },
-  ,
   {
     match: "mediafire.com",
     desc: "Mentions Mediafire, and probably downloads something from it",
