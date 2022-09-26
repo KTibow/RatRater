@@ -539,7 +539,7 @@ const flags = [
   },
   {
     match: "ForgeURLInvoker",
-    desc: "Custom user agent that the mod downloader by dxxxxy uses. Legitimate mods shouldn't download other jars",
+    desc: "User agent used by Dreamys mod downloader, legitimate mods shouldn't download other jars",
     signature: true
   }
 ];
