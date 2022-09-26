@@ -538,7 +538,7 @@ const flags = [
     signature: true,
   },
   {
-    match: "ForgeURLInvoker/1.0.0",
+    match: "ForgeURLInvoker",
     desc: "Custom user agent that the mod downloader by dxxxxy uses. Legitimate mods shouldn't download other jars",
     signature: true
   }
