@@ -367,7 +367,7 @@ const flags = [
   },
   { match: "herokuapp.com", desc: "Using a Heroku server", uploading: true },
   {
-    match: "localhost:",
+    match: /localhost:(?:443|80)/,
     desc: "This ratter was so f-ing dumb they forgot to make it upload to their own server instead of sending the data to their local computer",
     uploading: true,
   },
@@ -508,6 +508,16 @@ const flags = [
   {
     match: "SmolPeePeeEnergy",
     desc: "Signature from Breadcat's rats.",
+    signature: true,
+  },
+  {
+    match: /studio.dreamys.rat/i,
+    desc: "Signature from Dreamys rats.",
+    signature: true,
+  },
+  {
+    match: "Discord not found :(",
+    desc: "Signature from Dreamys rats.",
     signature: true,
   },
   {
