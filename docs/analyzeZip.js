@@ -367,7 +367,7 @@ const flags = [
   },
   { match: "herokuapp.com", desc: "Using a Heroku server", uploading: true },
   {
-    match: "localhost",
+    match: "localhost:",
     desc: "This ratter was so f-ing dumb they forgot to make it upload to their own server instead of sending the data to their local computer",
     uploading: true,
   },
