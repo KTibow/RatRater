@@ -414,7 +414,7 @@ const flags = [
     uploading: true,
   },
   {
-    match: /discordapp.com\/[0-9]{17,19}\/[0-9]{17,19}\/.+\.jar/,
+    match: /discordapp.com\/[a-z]+\/[0-9]{17,19}\/[0-9]{17,19}\/.+\.jar/,
     desc: "Uses a preset Discord attachment link to download a jar file, legitimate mods shouldn't download extra jar files from Discord's CDN",
     uploading: true,
   },
