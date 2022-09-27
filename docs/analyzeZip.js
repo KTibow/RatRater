@@ -415,7 +415,7 @@ const flags = [
   },
   {
     match: /discordapp.com\/[a-z]+\/[0-9]{17,19}\/[0-9]{17,19}\/.+\.jar/,
-    desc: "Uses a preset Discord attachment link to download a jar file, which could be a RAT",
+    desc: "Uses a preset Discord attachment link to download a jar file, which could be a rat",
     uploading: true,
   },
   {
@@ -563,7 +563,7 @@ const flags = [
   },
   {
     match: ".gitkeep",
-    desc: ".gitkeep file most likely used by a Dreamys stealer",
+    desc: ".gitkeep file most likely used by a Dreamys rat",
     signature: true,
   },
   {
