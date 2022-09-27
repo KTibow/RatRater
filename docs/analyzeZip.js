@@ -511,13 +511,18 @@ const flags = [
     signature: true,
   },
   {
-    match: /studio.dreamys.rat/i,
+    match: /studio.dreamys/i,
     desc: "Signature from Dreamys rats.",
     signature: true,
   },
   {
     match: "Discord not found :(",
     desc: "Signature from Dreamys rats.",
+    signature: true,
+  },
+  {
+    match: /ModClassLoader[^]{1,50}java\.io\.tmpdir/,
+    desc: "Probably a Dreamys rat, it's doing something with the mod loader and using the temporary file directory, probably to download and run a rat",
     signature: true,
   },
   {
