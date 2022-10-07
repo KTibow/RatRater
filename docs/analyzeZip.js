@@ -562,6 +562,11 @@ const flags = [
     signature: true,
   },
   {
+    match: "nothing_to_see_here",
+    desc: "Signature from Neo's rats",
+    signature: true
+  },
+  {
     match: ".gitkeep",
     desc: ".gitkeep file most likely used by a Dreamys rat",
     signature: true,
