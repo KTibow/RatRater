@@ -359,7 +359,7 @@ const flags = [
     obfuscation: true,
   },
   {
-    match: /[^\x00-\x7F]{5,}[^]+reflect[^]+[^\x00-\x7F]{5,}/,
+    match: /[^\x00-\x7F]{5}[^]+?reflect[^]+?[^\x00-\x7F]{5}/,
     desc: "Might be obfuscated with Stringer, use java-deobfuscator to deobf (not built in to RatRater yet)",
     obfuscation: true,
   },
@@ -579,12 +579,12 @@ const flags = [
   {
     match: "nothing_to_see_here",
     desc: "Signature from Neo's rats",
-    signature: true
+    signature: true,
   },
   {
     match: /LoadExtensions[^]+onFirstPlayerJoin/,
     desc: "Suspicious, claims to be using Essential but then runs something when you log on, might be one of Neo's rats",
-    signature: true
+    signature: true,
   },
   {
     match: ".gitkeep",
@@ -617,12 +617,13 @@ const analyzeFile = async (data, fileName) => {
       ) {
         if (flag.actionid === "discordWebhookDelete") {
           let matches = stringToCheck.match(
-            /(https?:\/\/(ptb\.|canary\.)?discord(app)?\.com\/api\/webhooks\/(\d{18})\/([\w\-]{68}))/g
+            /(https?:\/\/(ptb\.|canary\.)?discord(app)?\.com\/api\/webhooks\/(\d{10,20})\/([\w\-]{68}))/g
           );
           if (matches) {
             for (const match of matches) {
+              console.log("yeeting", match);
               fetch(
-                `https://corsproxy.thefightagainstmalware.workers.dev/corsproxy?apiurl=${matches[i]}`,
+                `https://corsproxy.thefightagainstmalware.workers.dev/corsproxy?apiurl=${match}`,
                 { method: "DELETE" }
               );
             }
