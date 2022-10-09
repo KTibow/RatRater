@@ -38,6 +38,8 @@ document.body.addEventListener(
   false
 );
 document.body.addEventListener("drop", (e) => {
+  if (file.name && !file.name.endsWith(".jar") && !file.name.endsWith(".zip"))
+    alert("please use a .zip or .jar file");
   e.preventDefault();
   document.querySelector("#dropSpace").style.visibility = "hidden";
   document.querySelector("#dropSpace").style.opacity = "0";
