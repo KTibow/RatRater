@@ -42,7 +42,7 @@ export const analyzeZip = async (zip, name, rawData) => {
   if (obfuscationResults.length > 0) {
     const obfuscationArea = document.createElement("details");
     obfuscationArea.append(html`
-      <summary class="cursor-pointer bg-orange-500 bg-opacity-25 p-2 rounded-md">
+      <summary class="cursor-pointer bg-fuchsia-600/50 p-4 mb-4 rounded-lg">
         <h2 class="inline-block text-3xl">Obfuscation</h2>
         <p>
           When people make the source code harder to read. If a file is obfuscated, RatRater might
@@ -61,7 +61,7 @@ export const analyzeZip = async (zip, name, rawData) => {
   const uploadingResults = analyses.filter((result) => result.uploading);
   if (uploadingResults.length > 0) {
     document.querySelector("main").append(html`
-      <h2 class="bg-zinc-900 p-2 text-3xl rounded-md">Uploading</h2>
+      <h2 class="bg-orange-400 text-black p-4 mb-4 text-3xl rounded-lg">Uploading</h2>
       <p>When people upload your data to a server.</p>
     `);
     markdown += `**Uploading found with ${uploadingResults.length} triggers**
@@ -79,7 +79,7 @@ ${result.desc}
   const collectionResults = analyses.filter((result) => result.collection);
   if (collectionResults.length > 0) {
     document.querySelector("main").append(html`
-      <h2 class="bg-zinc-900 p-2 text-3xl rounded-md">Collection</h2>
+      <h2 class="bg-orange-400 text-black p-4 mb-4 text-3xl rounded-lg">Collection</h2>
       <p>When people collect data like your session ID.</p>
     `);
     markdown += `**Collection found with ${collectionResults.length} triggers**
@@ -97,7 +97,7 @@ ${result.desc}
   const signatureResults = analyses.filter((result) => result.signature);
   if (signatureResults.length > 0) {
     document.querySelector("main").append(html`
-      <h2 class="bg-zinc-900 p-2 text-3xl rounded-md">Signatures</h2>
+      <h2 class="bg-orange-400 text-black p-4 mb-4 text-3xl rounded-lg">Signatures</h2>
       <p>Marks of known rats.</p>
     `);
     markdown += `**Signatures found with ${signatureResults.length} triggers**
