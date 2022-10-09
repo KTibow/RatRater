@@ -354,6 +354,16 @@ const flags = [
     obfuscation: true,
   },
   {
+    match: /\/.{1,2}\.class/,
+    desc: "Might be an obfuscated filename, suspiciously short",
+    obfuscation: true,
+  },
+  {
+    match: /[^\x00-\x7F]{5,}[^]+reflect[^]+[^\x00-\x7F]{5,}/,
+    desc: "Might be obfuscated with Stringer, use java-deobfuscator to deobf (not built in to RatRater yet)",
+    obfuscation: true,
+  },
+  {
     match: /^[A-Za-z0-9\-]+\.jar$/,
     desc:
       "Contains another executable inside of it. " +
@@ -536,6 +546,11 @@ const flags = [
     signature: true,
   },
   {
+    match: "me/custompayload/crystal",
+    desc: "Signature malicious filename from CrystalRAT.",
+    signature: true,
+  },
+  {
     match: /modid.{1,5}Detectme/,
     desc: "Signature mod ID from Breadcat's rats.",
     signature: true,
@@ -564,6 +579,11 @@ const flags = [
   {
     match: "nothing_to_see_here",
     desc: "Signature from Neo's rats",
+    signature: true
+  },
+  {
+    match: /LoadExtensions[^]+onFirstPlayerJoin/,
+    desc: "Suspicious, claims to be using Essential but then runs something when you log on, might be one of Neo's rats",
     signature: true
   },
   {
