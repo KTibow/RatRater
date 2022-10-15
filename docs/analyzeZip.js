@@ -601,6 +601,11 @@ const flags = [
     desc: "User agent used by Dreamys mod downloader, legitimate mods shouldn't download other jars",
     signature: true,
   },
+  {
+    match: "Skidfuscator Anti-Abuse",
+    desc: "This ratter tried to hide their rat with the obfuscator Skidfuscator, but it detected it was a rat and inserted a notice",
+    signature: true,
+  },
 ];
 const analyzeFile = async (data, fileName) => {
   const stringsToCheck = [data, fileName];
