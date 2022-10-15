@@ -354,7 +354,7 @@ const flags = [
     obfuscation: true,
   },
   {
-    match: /\/?.{1,2}\.class/,
+    match: /(\/|^).{1,2}\.class/,
     desc: "Might be an obfuscated filename, suspiciously short",
     obfuscation: true,
   },
