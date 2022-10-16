@@ -516,7 +516,7 @@ const flags = [
     collection: true,
   },
   {
-    match: "Microsoft\\Windows NT\\CurrentVersion\\SoftwareProtectionPlatform",
+    match: String.raw`Microsoft\\Windows NT\\CurrentVersion\\SoftwareProtectionPlatform`,
     desc: "Looks for your windows product key",
     collection: true,
   },
