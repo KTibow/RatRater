@@ -516,6 +516,11 @@ const flags = [
     collection: true,
   },
   {
+    match: String.raw`Microsoft\\Windows NT\\CurrentVersion\\SoftwareProtectionPlatform`,
+    desc: "Looks for your windows product key",
+    collection: true,
+  },
+  {
     match: "CustomPayload#1337",
     desc: "Signature from the rat maker CustomPayload.",
     signature: true,
