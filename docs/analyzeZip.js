@@ -626,11 +626,6 @@ const flags = [
     desc: "Reversed string of the session id function. Signature of Dreamys.",
     signature: true
   },
-  {
-    match: "Loader.isModLoaded(\"pizzaclient\")",
-    desc: "Checks to see if Pizza Client is loaded. This may be good or bad.",
-    signature: true
-  }
 ];
 const analyzeFile = async (data, fileName) => {
   const stringsToCheck = [data, fileName];
