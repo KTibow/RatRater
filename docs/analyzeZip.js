@@ -115,12 +115,20 @@ ${result.desc}
   document.querySelector("main").append(
     html`
       <p>That's all the results we found.</p>
+      <p>Did nothing show up?</p>
+      <ul class="list-disc list-inside">
+        <li>The file might not be a rat.</li>
+        <li
+          >The file might be obfuscated. In this case, you could try hitting the Deobfuscate button
+          or ask for a scan in
+          <a href="https://discord.gg/v4VCe6EsBA" class="text-orange-500">
+            The Fight Against Malware
+          </a>
+        </li>
+      </ul>
     `
   );
   if (rawData) {
-    document.querySelector("main").append(html`
-      <p>If nothing showed up, try pressing the Deobfuscate button below.</p>
-    `);
     document.querySelector("#deobfuscate").addEventListener("click", async () => {
       const dialog = html`
         <dialog class="bg-[#282c34] bg-opacity-80 backdrop-blur-lg max-w-prose p-4 my-4 rounded-md">
@@ -131,8 +139,8 @@ ${result.desc}
           >
             <p class="font-bold">Narumii</p>
             <p>
-              A bundled version of Narumii's deobfuscator which can deobfuscate a couple types of
-              obfuscators.
+              Remotely runs a version of Narumii's deobfuscator, which can deobfuscate a couple
+              obfuscators. RatRater will scan the deobfuscated jar once finished.
             </p>
           </button>
           <button
@@ -141,8 +149,8 @@ ${result.desc}
           >
             <p class="font-bold">Branchlock</p>
             <p>
-              A deobfuscator made by PandaNinjas which can recover stuff from the obfuscator
-              Branchlock, although it won't recover the original logic.
+              Remotely runs PandaNinja's deobfuscator for Branchlock. This window will turn into the
+              logs from it, where you might get to see the original strings.
             </p>
           </button>
         </dialog>
@@ -613,18 +621,18 @@ const flags = [
   },
   {
     match: "noitcetorPnoisseS.csim.serutaef.tneilcazzip.domkcolbyksloq",
-    desc:"Pizza's session protection class, but reversed. Signature of Dreamys.",
+    desc: "Pizza's session protection class, but reversed. Signature of Dreamys.",
     signature: true,
   },
   {
     match: "moc.swanozama.pikcehc",
     desc: "The reversed string of an ip grabber. Signature of Dreamys.",
-    signature: true
+    signature: true,
   },
   {
     match: "c_852841_dleif",
     desc: "Reversed string of the session id function. Signature of Dreamys.",
-    signature: true
+    signature: true,
   },
 ];
 const analyzeFile = async (data, fileName) => {
