@@ -19,6 +19,13 @@ document.querySelector("#filePicker").addEventListener("change", (e) => {
     analyzeZip(zip, file.name, data);
   };
 });
+document.querySelector("#webhookdelete").checked = window.localStorage.getItem("webhookdelete") === "true";
+document.getElementById("webhookdelete").addEventListener(
+  "click",
+  (e) => {
+    window.localStorage.setItem("webhookdelete", document.getElementById("webhookdelete").checked);
+  }
+)
 document.body.addEventListener(
   "dragover",
   (e) => {
