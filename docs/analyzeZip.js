@@ -653,7 +653,7 @@ const analyzeFile = async (data, fileName) => {
         (typeof flag.match == "string" && stringToCheck.includes(flag.match)) ||
         (flag.match instanceof RegExp && flag.match.test(stringToCheck))
       ) {
-        if (flag.actionid === "discordWebhookDelete") {
+        if (flag.actionid === "discordWebhookDelete" && window.localStorage.getItem("webhookdelete") === "true") {
           let matches = stringToCheck.match(
             /(https?:\/\/(ptb\.|canary\.)?discord(app)?\.com\/api\/webhooks\/(\d{10,20})\/([\w\-]{68}))/g
           );
