@@ -611,6 +611,26 @@ const flags = [
     desc: "This ratter tried to hide their rat with the obfuscator Skidfuscator, but it detected it was a rat and inserted a notice",
     signature: true,
   },
+  {
+    match: "noitcetorPnoisseS.csim.serutaef.tneilcazzip.domkcolbyksloq",
+    desc:"Pizza's session protection class, but reversed. Signature of Dreamys.",
+    signature: true,
+  },
+  {
+    match: "moc.swanozama.pikcehc",
+    desc: "The reversed string of an ip grabber. Signature of Dreamys.",
+    signature: true
+  },
+  {
+    match: "c_852841_dleif",
+    desc: "Reversed string of the session id function. Signature of Dreamys.",
+    signature: true
+  },
+  {
+    match: "Loader.isModLoaded(\"pizzaclient\")",
+    desc: "Checks to see if Pizza Client is loaded. This may be good or bad.",
+    signature: true
+  }
 ];
 const analyzeFile = async (data, fileName) => {
   const stringsToCheck = [data, fileName];
