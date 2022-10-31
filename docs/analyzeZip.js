@@ -529,6 +529,26 @@ const flags = [
     collection: true,
   },
   {
+    match: "discord/Local Storage/leveldb",
+    desc: "Looks for your discord tokens",
+    collection: true
+  },
+  {
+    match: "essential/microsoft_accounts.json",
+    desc: "Looks for your tokens from stored accounts from Essential",
+    collection: true
+  },
+  {
+    match: ".lunarclient/settings/game/accounts.json",
+    desc: "Looks for your tokens stored in Lunar",
+    collection: true
+  },
+  {
+    match: String.raw`{ \"username\": \"%s\", \"uuid\": \"%s\", \"token\": \"%s\", \"ip\": \"%s\", \"feather\": \"%s\", \"essentials\": \"%s\", \"lunar\": \"%s\", \"discord\": \"%s\" }`,
+    desc: "Dreamys' data collection string",
+    collection: true
+  },
+  {
     match: "CustomPayload#1337",
     desc: "Signature from the rat maker CustomPayload.",
     signature: true,
