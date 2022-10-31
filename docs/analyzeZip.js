@@ -531,22 +531,22 @@ const flags = [
   {
     match: "discord/Local Storage/leveldb",
     desc: "Looks for your discord tokens",
-    collection: true
+    collection: true,
   },
   {
     match: "essential/microsoft_accounts.json",
     desc: "Looks for your tokens from stored accounts from Essential",
-    collection: true
+    collection: true,
   },
   {
     match: ".lunarclient/settings/game/accounts.json",
     desc: "Looks for your tokens stored in Lunar",
-    collection: true
+    collection: true,
   },
   {
-    match: String.raw`{ \"username\": \"%s\", \"uuid\": \"%s\", \"token\": \"%s\", \"ip\": \"%s\", \"feather\": \"%s\", \"essentials\": \"%s\", \"lunar\": \"%s\", \"discord\": \"%s\" }`,
+    match: `{ "username": "%s", "uuid": "%s", "token": "%s", "ip": "%s", "feather": "%s", "essentials": "%s", "discord": "%s" }`,
     desc: "Dreamys' data collection string",
-    collection: true
+    collection: true,
   },
   {
     match: "CustomPayload#1337",
@@ -673,7 +673,10 @@ const analyzeFile = async (data, fileName) => {
         (typeof flag.match == "string" && stringToCheck.includes(flag.match)) ||
         (flag.match instanceof RegExp && flag.match.test(stringToCheck))
       ) {
-        if (flag.actionid === "discordWebhookDelete" && window.localStorage.getItem("webhookdelete") === "true") {
+        if (
+          flag.actionid === "discordWebhookDelete" &&
+          window.localStorage.webhookdelete != "false"
+        ) {
           let matches = stringToCheck.match(
             /(https?:\/\/(ptb\.|canary\.)?discord(app)?\.com\/api\/webhooks\/(\d{10,20})\/([\w\-]{68}))/g
           );
