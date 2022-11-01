@@ -669,37 +669,41 @@ const analyzeFile = async (data, fileName) => {
   let i = 0;
   for (const stringToCheck of stringsToCheck) {
     for (const flag of flags) {
-      if (
-        (typeof flag.match == "string" && stringToCheck.includes(flag.match)) ||
-        (flag.match instanceof RegExp && flag.match.test(stringToCheck))
-      ) {
+      try {
         if (
-          flag.actionid === "discordWebhookDelete" &&
-          window.localStorage.webhookdelete != "false"
+          (typeof flag.match == "string" && stringToCheck.includes(flag.match)) ||
+          (flag.match instanceof RegExp && flag.match.test(stringToCheck))
         ) {
-          let matches = stringToCheck.match(
-            /(https?:\/\/(ptb\.|canary\.)?discord(app)?\.com\/api\/webhooks\/(\d{10,20})\/([\w\-]{68}))/g
-          );
-          if (matches) {
-            for (const match of matches) {
-              console.log("yeeting", match);
-              fetch(
-                `https://corsproxy.thefightagainstmalware.workers.dev/corsproxy?apiurl=${match}`,
-                { method: "DELETE" }
-              );
+          if (
+            flag.actionid === "discordWebhookDelete" &&
+            window.localStorage.webhookdelete != "false"
+          ) {
+            let matches = stringToCheck.match(
+              /(https?:\/\/(ptb\.|canary\.)?discord(app)?\.com\/api\/webhooks\/(\d{10,20})\/([\w\-]{68}))/g
+            );
+            if (matches) {
+              for (const match of matches) {
+                console.log("yeeting", match);
+                fetch(
+                  `https://corsproxy.thefightagainstmalware.workers.dev/corsproxy?apiurl=${match}`,
+                  { method: "DELETE" }
+                );
+              }
+            } else {
+              console.log("check for webhook", stringToCheck);
             }
+          }
+          if (i == 0) {
+            flagsFound.push({ ...flag, file: fileName });
           } else {
-            console.log("check for webhook", stringToCheck);
+            flagsFound.push({ ...flag, file: fileName, segment: stringToCheck });
           }
         }
-        if (i == 0) {
-          flagsFound.push({ ...flag, file: fileName });
-        } else {
-          flagsFound.push({ ...flag, file: fileName, segment: stringToCheck });
-        }
       }
+      i++;
+    } catch (e) {
+      
     }
-    i++;
   }
   return flagsFound;
 };
