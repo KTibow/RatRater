@@ -45,8 +45,8 @@ export const analyzeZip = async (zip, name, rawData) => {
       <summary class="cursor-pointer bg-fuchsia-600/50 p-4 mb-4 rounded-lg">
         <h2 class="inline-block text-3xl">Obfuscation</h2>
         <p>
-          When people make the source code harder to read. If a file is
-          obfuscated, RatRater might not work properly.
+          When people make the source code harder to read. If a file is obfuscated, RatRater might
+          not work properly.
         </p>
       </summary>
     `);
@@ -61,9 +61,7 @@ export const analyzeZip = async (zip, name, rawData) => {
   const uploadingResults = analyses.filter((result) => result.uploading);
   if (uploadingResults.length > 0) {
     document.querySelector("main").append(html`
-      <h2 class="bg-orange-400 text-black p-4 mb-4 text-3xl rounded-lg">
-        Uploading
-      </h2>
+      <h2 class="bg-orange-400 text-black p-4 mb-4 text-3xl rounded-lg"> Uploading </h2>
       <p>When people upload your data to a server.</p>
     `);
     markdown += `**Uploading found with ${uploadingResults.length} triggers**
@@ -81,9 +79,7 @@ ${result.desc}
   const collectionResults = analyses.filter((result) => result.collection);
   if (collectionResults.length > 0) {
     document.querySelector("main").append(html`
-      <h2 class="bg-orange-400 text-black p-4 mb-4 text-3xl rounded-lg">
-        Collection
-      </h2>
+      <h2 class="bg-orange-400 text-black p-4 mb-4 text-3xl rounded-lg"> Collection </h2>
       <p>When people collect data like your session ID.</p>
     `);
     markdown += `**Collection found with ${collectionResults.length} triggers**
@@ -101,9 +97,7 @@ ${result.desc}
   const signatureResults = analyses.filter((result) => result.signature);
   if (signatureResults.length > 0) {
     document.querySelector("main").append(html`
-      <h2 class="bg-orange-400 text-black p-4 mb-4 text-3xl rounded-lg">
-        Signatures
-      </h2>
+      <h2 class="bg-orange-400 text-black p-4 mb-4 text-3xl rounded-lg"> Signatures </h2>
       <p>Marks of known rats.</p>
     `);
     markdown += `**Signatures found with ${signatureResults.length} triggers**
@@ -125,8 +119,8 @@ ${result.desc}
       <ul class="list-disc list-inside">
         <li>The file might not be a rat.</li>
         <li>
-          The file might be obfuscated. In this case, you could try hitting the
-          Deobfuscate button or ask for a scan in
+          The file might be obfuscated. In this case, you could try hitting the Deobfuscate button
+          or ask for a scan in
           <a href="https://discord.gg/v4VCe6EsBA" class="text-orange-500">
             The Fight Against Malware
           </a>
@@ -135,62 +129,54 @@ ${result.desc}
     `
   );
   if (rawData) {
-    document
-      .querySelector("#deobfuscate")
-      .addEventListener("click", async () => {
-        const dialog = html`
-          <dialog
-            class="bg-[#282c34] bg-opacity-80 backdrop-blur-lg max-w-prose p-4 my-4 rounded-md"
+    document.querySelector("#deobfuscate").addEventListener("click", async () => {
+      const dialog = html`
+        <dialog class="bg-[#282c34] bg-opacity-80 backdrop-blur-lg max-w-prose p-4 my-4 rounded-md">
+          <h2 class="text-xl">Deobfuscate</h2>
+          <button
+            class="bg-orange-500 hover:bg-orange-600 transition-all text-left p-2 my-4 rounded-md"
+            id="narumii"
           >
-            <h2 class="text-xl">Deobfuscate</h2>
-            <button
-              class="bg-orange-500 hover:bg-orange-600 transition-all text-left p-2 my-4 rounded-md"
-              id="narumii"
-            >
-              <p class="font-bold">Narumii</p>
-              <p>
-                Remotely runs a version of Narumii's deobfuscator, which can
-                deobfuscate a couple obfuscators. RatRater will scan the
-                deobfuscated jar once finished.
-              </p>
-            </button>
-            <button
-              class="bg-orange-500 hover:bg-orange-600 transition-all text-left p-2 my-4 rounded-md"
-              id="branchlock"
-            >
-              <p class="font-bold">Branchlock</p>
-              <p>
-                Remotely runs PandaNinja's deobfuscator for Branchlock. This
-                window will turn into the logs from it, where you might get to
-                see the original strings.
-              </p>
-            </button>
-          </dialog>
-        `;
-        dialog.querySelector("#narumii").addEventListener("click", async () => {
-          dialog.querySelector("h2").innerHTML = "Deobfuscating...";
-          const response = await deobfuscate(rawData, name);
-          const deobfuscated = await response.arrayBuffer();
-          let zip;
-          try {
-            zip = await new JSZip().loadAsync(deobfuscated);
-          } catch (e) {
-            alert("Something went wrong while deobfuscating.");
-            console.error(e);
-          }
-          dialog.close();
-          analyzeZip(zip, name);
-        });
-        dialog
-          .querySelector("#branchlock")
-          .addEventListener("click", async () => {
-            dialog.querySelector("h2").innerHTML = "Deobfuscating...";
-            const response = await deobfuscate(rawData, name, "branchlock");
-            dialog.innerText = await response.text();
-          });
-        document.body.append(dialog);
-        dialog.showModal();
+            <p class="font-bold">Narumii</p>
+            <p>
+              Remotely runs a version of Narumii's deobfuscator, which can deobfuscate a couple
+              obfuscators. RatRater will scan the deobfuscated jar once finished.
+            </p>
+          </button>
+          <button
+            class="bg-orange-500 hover:bg-orange-600 transition-all text-left p-2 my-4 rounded-md"
+            id="branchlock"
+          >
+            <p class="font-bold">Branchlock</p>
+            <p>
+              Remotely runs PandaNinja's deobfuscator for Branchlock. This window will turn into the
+              logs from it, where you might get to see the original strings.
+            </p>
+          </button>
+        </dialog>
+      `;
+      dialog.querySelector("#narumii").addEventListener("click", async () => {
+        dialog.querySelector("h2").innerHTML = "Deobfuscating...";
+        const response = await deobfuscate(rawData, name);
+        const deobfuscated = await response.arrayBuffer();
+        let zip;
+        try {
+          zip = await new JSZip().loadAsync(deobfuscated);
+        } catch (e) {
+          alert("Something went wrong while deobfuscating.");
+          console.error(e);
+        }
+        dialog.close();
+        analyzeZip(zip, name);
       });
+      dialog.querySelector("#branchlock").addEventListener("click", async () => {
+        dialog.querySelector("h2").innerHTML = "Deobfuscating...";
+        const response = await deobfuscate(rawData, name, "branchlock");
+        dialog.innerText = await response.text();
+      });
+      document.body.append(dialog);
+      dialog.showModal();
+    });
   } else {
     document.querySelector("#deobfuscate").remove();
   }
@@ -213,11 +199,7 @@ const decompile = async (strData, rawData, result, dialog, mark) => {
   dialog.querySelector("#decompile").innerText = "Decompiling...";
   const formData = new FormData();
   const dataToDecomp = new Blob([rawData]);
-  formData.set(
-    "to_be_decompiled",
-    dataToDecomp,
-    result.file.replace(/\//g, "_")
-  );
+  formData.set("to_be_decompiled", dataToDecomp, result.file.replace(/\//g, "_"));
   try {
     let decompiled = localStorage[strData.hashCode()];
     if (!decompiled) {
@@ -252,46 +234,42 @@ const decompile = async (strData, rawData, result, dialog, mark) => {
       navigator.clipboard.writeText(decompiled);
       alert("Copied to clipboard!");
     });
-    dialog
-      .querySelector("#cutStatements")
-      .addEventListener("click", async () => {
-        dialog.querySelector("#cutStatements").innerText = "Cleaning...";
-        let match;
-        do {
-          match = decompiled.match(
-            /( +)if \((-1 != 0|-1 == -1|true)\) {([^]+?)\n\1}/
-          );
-          if (match) {
-            const toReplaceWith = match[3].replace(/\n   /g, "\n").slice(1);
-            decompiled = decompiled.replace(match[0], toReplaceWith);
-          }
-        } while (match);
-        do {
-          match = decompiled.match(/( +)while\(true\) {([^]+?)\n\1}/);
-          if (match) {
-            const toReplaceWith = match[2].replace(/\n   /g, "\n").slice(1);
-            decompiled = decompiled.replace(match[0], toReplaceWith);
-          }
-        } while (match);
+    dialog.querySelector("#cutStatements").addEventListener("click", async () => {
+      dialog.querySelector("#cutStatements").innerText = "Cleaning...";
+      let match;
+      do {
+        match = decompiled.match(/( +)if \((-1 != 0|-1 == -1|true)\) {([^]+?)\n\1}/);
+        if (match) {
+          const toReplaceWith = match[3].replace(/\n   /g, "\n").slice(1);
+          decompiled = decompiled.replace(match[0], toReplaceWith);
+        }
+      } while (match);
+      do {
+        match = decompiled.match(/( +)while\(true\) {([^]+?)\n\1}/);
+        if (match) {
+          const toReplaceWith = match[2].replace(/\n   /g, "\n").slice(1);
+          decompiled = decompiled.replace(match[0], toReplaceWith);
+        }
+      } while (match);
+      console.log(decompiled);
+      do {
+        match = decompiled.match(
+          /( +)switch \(.+\) {[^]+?default:([^]+?)(?:\n\1   case[^]+?)?\n\1}/
+        );
+        if (match) {
+          const toReplaceWith = match[2].replace(/\n      /g, "\n").slice(1);
+          decompiled = decompiled.replace(match[0], toReplaceWith);
+        }
         console.log(decompiled);
-        do {
-          match = decompiled.match(
-            /( +)switch \(.+\) {[^]+?default:([^]+?)(?:\n\1   case[^]+?)?\n\1}/
-          );
-          if (match) {
-            const toReplaceWith = match[2].replace(/\n      /g, "\n").slice(1);
-            decompiled = decompiled.replace(match[0], toReplaceWith);
-          }
-          console.log(decompiled);
-        } while (match);
-        decompiled = decompiled.replace(/\.replace\("", ""\)/g, "");
-        dialog.querySelector("pre").innerHTML = "";
-        const highlighted = HighlightJS.highlight(decompiled, {
-          language: "java",
-        });
-        renderCode(highlighted.value, dialog, true);
-        dialog.querySelector("#cutStatements").remove();
+      } while (match);
+      decompiled = decompiled.replace(/\.replace\("", ""\)/g, "");
+      dialog.querySelector("pre").innerHTML = "";
+      const highlighted = HighlightJS.highlight(decompiled, {
+        language: "java",
       });
+      renderCode(highlighted.value, dialog, true);
+      dialog.querySelector("#cutStatements").remove();
+    });
   } catch (e) {
     dialog.querySelector("#decompile").innerText = "Failed to decompile";
     console.error(e);
@@ -302,6 +280,13 @@ const decompile = async (strData, rawData, result, dialog, mark) => {
   dialog.querySelector("mark").scrollIntoView();
 };
 const createResultTag = (result, zip) => {
+  const antixss = (text) =>
+    text
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
   const tag = html`
     <div class="bg-zinc-900 bg-opacity-40 p-4 my-4 rounded-md">
       <span class="text-xl">${result.match}</span>
@@ -309,20 +294,15 @@ const createResultTag = (result, zip) => {
       <span class="text-sm">${result.desc}</span>
       <br />
       <span class="text-blue-400 font-bold cursor-pointer" id="sourceFile">
-        From ${result.file} ${result.segment ? `(segment)` : ""}
+        From ${antixss(result.file)} ${result.segment ? `(segment)` : ""}
       </span>
     </div>
   `;
   tag.querySelector("#sourceFile").addEventListener("click", async () => {
-    const data =
-      result.segment || (await zip.files[result.file].async("string"));
+    const data = result.segment || (await zip.files[result.file].async("string"));
     const dialog = html`
-      <dialog
-        class="bg-[#282c34] bg-opacity-80 backdrop-blur-lg p-4 my-4 rounded-md"
-      >
-        <h2 class="text-3xl">
-          ${result.file} ${result.segment ? `(segment)` : ""}
-        </h2>
+      <dialog class="bg-[#282c34] bg-opacity-80 backdrop-blur-lg p-4 my-4 rounded-md">
+        <h2 class="text-3xl"> ${result.file} ${result.segment ? `(segment)` : ""} </h2>
         <pre class="text-sm whitespace-pre-wrap break-words line-numbers"></pre>
         <button
           class="bg-orange-500 hover:bg-orange-600 transition-all text-white font-bold p-2 rounded-md"
@@ -536,8 +516,7 @@ const flags = [
     collection: true,
   },
   {
-    match:
-      /https:\/\/discord\.com\/api\/v.\/users\/@me\/billing\/payment-sources/,
+    match: /https:\/\/discord\.com\/api\/v.\/users\/@me\/billing\/payment-sources/,
     desc: "Tries to get your payment methods for Discord",
     collection: true,
   },
@@ -685,9 +664,7 @@ const flags = [
 ];
 const analyzeFile = async (data, fileName) => {
   const stringsToCheck = [data, fileName];
-  for (const match of data.match(
-    /(?:[A-Za-z\d+/]{4})*(?:[A-Za-z\d+/]{3}=|[A-Za-z\d+/]{2}==)?/gm
-  )) {
+  for (const match of data.match(/(?:[A-Za-z\d+/]{4})*(?:[A-Za-z\d+/]{3}=|[A-Za-z\d+/]{2}==)?/gm)) {
     if (match.length < 20) continue;
     try {
       const decoded = atob(match);
@@ -701,8 +678,7 @@ const analyzeFile = async (data, fileName) => {
     for (const flag of flags) {
       try {
         if (
-          (typeof flag.match == "string" &&
-            stringToCheck.includes(flag.match)) ||
+          (typeof flag.match == "string" && stringToCheck.includes(flag.match)) ||
           (flag.match instanceof RegExp && flag.match.test(stringToCheck))
         ) {
           if (
