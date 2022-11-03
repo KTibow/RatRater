@@ -279,14 +279,14 @@ const decompile = async (strData, rawData, result, dialog, mark) => {
     : mark.mark(result.match, { acrossElements: true });
   dialog.querySelector("mark").scrollIntoView();
 };
+const antixss = (text) =>
+  text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
 const createResultTag = (result, zip) => {
-  const antixss = (text) =>
-    text
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#039;");
   const tag = html`
     <div class="bg-zinc-900 bg-opacity-40 p-4 my-4 rounded-md">
       <span class="text-xl">${result.match}</span>
@@ -302,7 +302,7 @@ const createResultTag = (result, zip) => {
     const data = result.segment || (await zip.files[result.file].async("string"));
     const dialog = html`
       <dialog class="bg-[#282c34] bg-opacity-80 backdrop-blur-lg p-4 my-4 rounded-md">
-        <h2 class="text-3xl"> ${result.file} ${result.segment ? `(segment)` : ""} </h2>
+        <h2 class="text-3xl"> ${antixss(result.file)} ${result.segment ? `(segment)` : ""} </h2>
         <pre class="text-sm whitespace-pre-wrap break-words line-numbers"></pre>
         <button
           class="bg-orange-500 hover:bg-orange-600 transition-all text-white font-bold p-2 rounded-md"
