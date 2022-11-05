@@ -664,14 +664,16 @@ const flags = [
 ];
 const analyzeFile = async (data, fileName) => {
   const stringsToCheck = [data, fileName];
-  for (const match of data.match(/(?:[A-Za-z\d+/]{4})*(?:[A-Za-z\d+/]{3}=|[A-Za-z\d+/]{2}==)?/gm)) {
-    if (match.length < 20) continue;
-    try {
-      const decoded = atob(match);
-      if (/[^\u0010-\u007f]/.test(decoded)) continue;
-      stringsToCheck.push(decoded);
-    } catch (e) {}
-  }
+  try {
+    for (const match of data.match(/(?:[A-Za-z\d+/]{4})*(?:[A-Za-z\d+/]{3}=|[A-Za-z\d+/]{2}==)?/gm)) {
+      if (match.length < 20) continue;
+      try {
+        const decoded = atob(match);
+        if (/[^\u0010-\u007f]/.test(decoded)) continue;
+        stringsToCheck.push(decoded);
+      } catch (e) {}
+    }
+  } catch (e) {}
   const flagsFound = [];
   let i = 0;
   for (const stringToCheck of stringsToCheck) {
