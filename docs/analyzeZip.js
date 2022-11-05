@@ -8,15 +8,27 @@ import HighlightJS from "https://esm.run/highlight.js";
  * @param {string} name
  */
 export const analyzeZip = async (zip, name, rawData) => {
+  console.log(zip);
   const analyzableFiles = Object.values(zip.files).filter((file) => !file.dir);
   document.querySelector("main").innerHTML = `
-    RatRater results for ${name}
-    <progress id="progress" max="${
-      analyzableFiles.length * 2
-    }" value="0" class="border-revert w-full"></progress>
+    <p>RatRater results for ${name}</p>
+    <div id="showDuringAnalysis">
+      <progress id="progress" max="${
+        analyzableFiles.length * 2
+      }" value="0" class="border-revert w-full"></progress>
+      <p>Analyzing <span id="filesRemaining">[not started]</span></p>
+      <p>
+        Is RatRater stuck? There's probably a bug in RatRater,
+        and it might have been intentionally exploited by the creator of this file.
+        Ask in <a href="https://discord.gg/v4VCe6EsBA" class="text-orange-500">
+          The Fight Against Malware
+        </a>
+      </p>
+    </div>
   `;
   const progress = document.querySelector("#progress");
-  console.log(zip);
+  const filesRemaining = document.querySelector("#filesRemaining");
+  let currentFiles = analyzableFiles.map((file) => file.name);
   const analyses = (
     await Promise.all(
       analyzableFiles.map(async (file) => {
@@ -24,10 +36,32 @@ export const analyzeZip = async (zip, name, rawData) => {
         progress.value++;
         const result = await analyzeFile(data, file.name);
         progress.value++;
+        currentFiles = currentFiles.filter((otherFile) => otherFile != file.name);
+        switch (currentFiles.length) {
+          case 0:
+            filesRemaining.innerText = "";
+            break;
+          case 1:
+            filesRemaining.innerText = `${currentFiles[0]}`;
+            break;
+          case 2:
+            filesRemaining.innerText = `${currentFiles[0]} and ${currentFiles[1]}`;
+            break;
+          case 2:
+            filesRemaining.innerText = `${currentFiles[0]}, ${currentFiles[1]}, and ${currentFiles[2]}`;
+            break;
+          default:
+            filesRemaining.innerText = `${currentFiles[0]}, ${currentFiles[1]}, and ${
+              currentFiles.length - 2
+            } more`;
+            break;
+        }
+
         return result;
       })
     )
   ).flat();
+  document.querySelector("#showDuringAnalysis").remove();
   if (zip.comment?.includes("Branchlock")) {
     analyses.push({
       match: "Branchlock",
@@ -665,7 +699,9 @@ const flags = [
 const analyzeFile = async (data, fileName) => {
   const stringsToCheck = [data, fileName];
   try {
-    for (const match of data.match(/(?:[A-Za-z\d+/]{4})*(?:[A-Za-z\d+/]{3}=|[A-Za-z\d+/]{2}==)?/gm)) {
+    for (const match of data.match(
+      /(?:[A-Za-z\d+/]{4})*(?:[A-Za-z\d+/]{3}=|[A-Za-z\d+/]{2}==)?/gm
+    )) {
       if (match.length < 20) continue;
       try {
         const decoded = atob(match);
@@ -673,7 +709,9 @@ const analyzeFile = async (data, fileName) => {
         stringsToCheck.push(decoded);
       } catch (e) {}
     }
-  } catch (e) {}
+  } catch (e) {
+    console.warn("Could not check b64 in", fileName);
+  }
   const flagsFound = [];
   let i = 0;
   for (const stringToCheck of stringsToCheck) {
@@ -713,6 +751,7 @@ const analyzeFile = async (data, fileName) => {
           }
         }
       } catch (e) {
+        console.warn("Could not use flag", flag, "in", fileName);
         continue;
       }
     }
