@@ -630,8 +630,8 @@ const flags = [
     signature: true,
   },
   {
-    match: "me/custompayload/crystal",
-    desc: "Signature malicious filename from CrystalRAT.",
+    match: "me/custompayload",
+    desc: "Signature malicious filename from CustomPayload rats.",
     signature: true,
   },
   {
