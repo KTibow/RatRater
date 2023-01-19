@@ -695,6 +695,16 @@ const flags = [
     desc: "Reversed string of the session id function. Signature of Dreamys.",
     signature: true,
   },
+  {
+    match: "hi discord token is: ",
+    desc: "Signature from yars",
+    signature: true,
+  },
+  {
+    match: "you_want_to_be_a_ratter_too_then_join_this_dc",
+    desc: "Signature from yars",
+    signature: true,
+  }
 ];
 const analyzeFile = async (data, fileName) => {
   const stringsToCheck = [data, fileName];
