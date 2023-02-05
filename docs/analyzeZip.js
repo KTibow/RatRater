@@ -261,7 +261,7 @@ const decompile = async (strData, rawData, result, dialog, mark) => {
         class="bg-orange-500 hover:bg-orange-600 transition-all text-white font-bold p-2 rounded-md"
         id="cutStatements"
       >
-        Cut away statements
+        Remove highlighting
       </button>
     `);
     dialog.querySelector("#copy").addEventListener("click", () => {
