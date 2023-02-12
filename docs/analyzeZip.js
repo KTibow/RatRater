@@ -519,7 +519,7 @@ const flags = [
   },
   {
     match: "func_148254_d",
-    desc: "Authenticates with Mojang's session servers",
+    desc: "Reads your session token",
     collection: true,
   },
   { match: "func_111286_b", desc: "Reads your session ID", collection: true },
