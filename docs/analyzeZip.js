@@ -447,7 +447,12 @@ const flags = [
   },
   {
     match: /https?:\/\/discord\.com\/api\/webhooks/,
-    desc: "Using a preset Discord webhook",
+    desc: "References Discord's webhook endpoint",
+    uploading: true,
+  },
+  {
+    match: /(https?:\/\/(ptb\.|canary\.)?discord(app)?\.com\/api\/webhooks\/(\d{10,20})\/([\w\-]{68}))/g,
+    desc: "Uses a Discord webhook",
     uploading: true,
     actionid: "discordWebhookDelete",
   },
@@ -455,7 +460,6 @@ const flags = [
     match: /https?:\/\/discord\.com\/api[^]{5,}webhooks/,
     desc: "Might be using a Discord webhook",
     uploading: true,
-    actionid: "discordWebhookDelete",
   },
   {
     match: "https://discord.com/api/v8/channels/",
