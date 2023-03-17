@@ -659,6 +659,11 @@ const flags = [
     signature: true,
   },
   {
+    match: /java\/io\/BufferedReader.{1,5}java\/io\/InputStreamReader.{1,5}java\/lang\/String.{1,5}/,
+    desc: "Reads from a constructed stream, found in one rat to avoid being flagged but could be used otherwise",
+    signature: true
+  },
+  {
     match:
       /(0_|1`|2a|3b|4c|5d|6e|7f|8g|9h)(0_|1`|2a|3b|4c|5d|6e|7f|8g|9h)(0\*|1\+|2,|3-|4\.|5\/|60|71|82|93)(0p|1q|2r|3s|4t|5u|6v|7w|8x|9y)(0]|1\^|2_|3`|4a|5b|6c|7d|8e|9f)(0_|1`|2a|3b|4c|5d|6e|7f|8g|9h)(0`|1a|2b|3c|4d|5e|6f|7g|8h|9i)(0]|1\^|2_|3`|4a|5b|6c|7d|8e|9f)(0a|1b|2c|3d|4e|5f|6g|7h|8i|9j)(0n|1o|2p|3q|4r|5s|6t|7u|8v|9w)(0\^|1_|2`|3a|4b|5c|6d|7e|8f|9g)/,
     desc: "Definitely a way of storing the payload in Breadcat's rats.",
