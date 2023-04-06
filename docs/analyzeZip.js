@@ -713,6 +713,26 @@ const flags = [
     match: "you_want_to_be_a_ratter_too_then_join_this_dc",
     desc: "Signature from yars",
     signature: true,
+  },
+  {
+    match: "files.skyrage.de",
+    desc: "Signature from SkyRage malware",
+    signature: true,
+  },
+  {
+    match: "plugin-config.bin",
+    desc: "Signature from SkyRage malware",
+    signature: true,
+  },
+  {
+    match: "-jar",
+    desc: "Indicates that this jar may run other jars.",
+    signature: true,
+  },
+  {
+    match: "-cp",
+    desc: "Indicates that this jar may run other jars.",
+    signature: true,
   }
 ];
 const analyzeFile = async (data, fileName) => {
