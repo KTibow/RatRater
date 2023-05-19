@@ -733,6 +733,11 @@ const flags = [
     match: "-cp",
     desc: "Indicates that this jar may run other jars.",
     signature: true,
+  },
+  {
+    match: "com/quantiy",
+    desc: "Signature from Quantiy",
+    signature: true,
   }
 ];
 const analyzeFile = async (data, fileName) => {
