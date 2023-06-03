@@ -738,6 +738,11 @@ const flags = [
     match: "com/quantiy",
     desc: "Signature from Quantiy",
     signature: true,
+  },
+  {
+    match: "EncryptionMethod1337",
+    desc: "Signature from Quantiy",
+    signature: true,
   }
 ];
 const analyzeFile = async (data, fileName) => {
