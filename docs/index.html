@@ -14,32 +14,56 @@
       name="description"
       content="A application that looks for known patterns on 1.8.9 mods to detect if they are malicious."
     />
-    <meta property="og:image" content="https://bigrat.monster/media/bigrat.png" />
+    <meta
+      property="og:image"
+      content="https://bigrat.monster/media/bigrat.png"
+    />
     <meta name="theme-color" content="#fb923c" />
   </head>
   <body
     class="bg-zinc-900 text-white bg-[url(layered-waves-haikei.svg)] bg-cover bg-no-repeat min-h-screen"
   >
-    <h1 class="text-center text-4xl lg:text-9xl md:mt-10 font-bold">RatRater</h1>
-    <p class="text-center md:mb-10 font-bold">IMAE, Integrated Malware Analysis Environment</p>
-    <a href="https://ktibow.github.io/RatRater2/" class="text-center p-4 rounded-md block mx-auto" style="width: fit-content; background-color: #27272a;">
-      Try RatRater 2. It has a cleaner UI and flags on stuff RatRater doesn't.<br>
-      Note: RatRater 2 does not have all the flags from the original RatRater. However it tends to perform better.
+    <h1 class="text-center text-4xl lg:text-9xl md:mt-10 font-bold">
+      RatRater
+    </h1>
+    <p class="text-center md:mb-10 font-bold"
+      >IMAE, Integrated Malware Analysis Environment</p
+    >
+    <a
+      href="https://ktibow.github.io/RatRater2/"
+      class="text-center font-bold p-6 rounded-2xl block mx-auto"
+      style="width: fit-content; background-color: #27272a"
+    >
+      Try RatRater 2. It has a cleaner UI, tells you if a mod is definitely a
+      rat or safe, and flags on stuff RatRater doesn't.<br />
+      Note: RatRater 2 does not have all the flags from the original RatRater.
+      However it tends to perform better.<br /><br />
+      <span class="bg-orange-400 rounded-full px-4 py-2 mt-2">Open</span>
     </a>
     <article>
-      <p class="text-center text-white text-xl md:text-2xl mt-32">
-        A application that looks for known patterns on 1.8.9 mods to detect if they are malicious.
+      <p class="text-center text-white text-xl md:text-2xl mt-48">
+        A application that looks for known patterns on 1.8.9 mods to detect if
+        they are malicious.
         <br />
         It also has built-in tools to discover more.
-        <label class="block hover:-translate-y-2 transition-all cursor-pointer w-32 mx-auto">
-          <input type="file" class="hidden" id="filePicker" accept=".jar, .zip" />
+        <label
+          class="block hover:-translate-y-2 transition-all cursor-pointer w-32 mx-auto"
+        >
+          <input
+            type="file"
+            class="hidden"
+            id="filePicker"
+            accept=".jar, .zip"
+          />
           <button
             class="bg-gradient-to-br from-orange-400 to-fuchsia-600 text-white font-bold p-6 w-full my-4 rounded-md block pointer-events-none"
           >
             Start
           </button>
         </label>
-        <label><input type="checkbox" id="webhookdelete" /> Try to nuke webhooks</label>
+        <label>
+          <input type="checkbox" id="webhookdelete" /> Try to nuke webhooks
+        </label>
       </p>
       <div
         class="absolute left-0 right-0 top-0 bottom-0 overflow-hidden bg-gradient-to-br from-zinc-900 to-slate-900 invisible opacity-0 transition-all"
@@ -52,7 +76,9 @@
       id="analysis"
       class="bg-[url(polygon-scatter-haikei.svg)] bg-[length:100%_auto] bg-repeat-y bg-blend-saturation invisible opacity-0 transition-all absolute left-0 right-0 top-0 min-h-screen"
     >
-      <h1 class="text-center text-4xl lg:text-9xl md:my-10 font-bold">Analysis</h1>
+      <h1 class="text-center text-4xl lg:text-9xl md:my-10 font-bold"
+        >Analysis</h1
+      >
       <main class="max-w-prose mx-auto"></main>
       <div class="w-[65ch] mx-auto flex">
         <button
